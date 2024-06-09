@@ -30,6 +30,8 @@ def convert_to_txt(input_file):
             text = main_content_match.group(1)
         else:
             raise ValueError("Could not find main content in the LaTeX file.")
+
+        text = text.replace("\n", "")
     elif file_extension == ".pdf":
         with pdfplumber.open(input_file) as pdf:
             text = "\n".join([page.extract_text() for page in pdf.pages])
