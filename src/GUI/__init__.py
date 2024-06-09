@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 
-from src.converters.convert import convert_to_txt
+from src.convertion.convert import convert_to_txt
 
 app = Flask(__name__)
 
