@@ -1,0 +1,6 @@
+Flask~=3.0.3
+pymongo~=4.7.2
+docx~=0.2.4
+docx2txt~=0.8
+pdfplumber~=0.11.0
+PyLaTeX~=1.4.2
