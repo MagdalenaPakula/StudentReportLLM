@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 
 from src.convertion.convert import convert_to_txt
+from src.messaging.rabbitmq import publish_message
 
 app = Flask(__name__)
 
@@ -14,6 +15,7 @@ def index():
             file.save(file_path)
             try:
                 text = convert_to_txt(file_path)
+                publish_message(exchange_name='logs', routing_key='', message=text)
                 return f"Converted text: {text}"
             except Exception as e:
                 return f"Error: {str(e)}"
@@ -22,5 +24,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)
-
-
