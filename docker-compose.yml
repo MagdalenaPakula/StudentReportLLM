@@ -8,10 +8,16 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+      - logstash
     environment:
       - MONGO_URI=mongodb://mongo:27017/
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
+      - LOGSTASH_HOST=logstash
+      - LOGSTASH_PORT=5044
+    networks:
+      - app-network
+      - elk
 
   mongo:
     image: mongo:latest
@@ -20,6 +26,8 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - app-network
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -27,6 +35,62 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - app-network
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    container_name: elasticsearch
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - elk
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.10.0
+    container_name: logstash
+    volumes:
+      - ./src/elk/logstash/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "5044:5044"
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.0
+    container_name: kibana
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    entrypoint: ["/bin/bash", "-c", "/usr/share/kibana/setup_kibana.sh"]
+    volumes:
+      - ./src/elk/kibana/setup_kibana.sh:/usr/share/kibana/setup_kibana.sh
+    networks:
+      - elk
+
+networks:
+  elk:
+    driver: bridge
+  app-network:
+    driver: bridge
 
 volumes:
   mongo_data:
+  esdata:

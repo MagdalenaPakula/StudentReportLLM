@@ -1,6 +1,11 @@
 import os
 import pika
 
+from src.logging.logstash_logger import LogStashLogger
+
+
+logger = LogStashLogger.get_logger()
+
 
 def publish_message(exchange_name, routing_key, message):
     connection = pika.BlockingConnection(pika.ConnectionParameters(
@@ -9,6 +14,7 @@ def publish_message(exchange_name, routing_key, message):
     channel = connection.channel()
     channel.exchange_declare(exchange=exchange_name, exchange_type='fanout')
     channel.basic_publish(exchange=exchange_name, routing_key=routing_key, body=message)
+    logger.info(f'Published Message: {message} | Exchange: {exchange_name} | Routing Key: {routing_key}')
     connection.close()
 
 
