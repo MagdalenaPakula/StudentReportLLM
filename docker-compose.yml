@@ -62,7 +62,7 @@ services:
     image: docker.elastic.co/logstash/logstash:7.10.0
     container_name: logstash
     volumes:
-      - ./src/logstash/pipeline:/usr/share/logstash/pipeline
+      - ./src/elk/logstash/pipeline:/usr/share/logstash/pipeline
     ports:
       - "5044:5044"
     depends_on:
@@ -79,6 +79,9 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
+    entrypoint: ["/bin/bash", "-c", "/usr/local/bin/kibana-docker && /setup_kibana.sh"]
+    volumes:
+      - ./src/elk/kibana/setup_kibana.sh:/setup_kibana.sh
     networks:
       - elk
 
