@@ -3,34 +3,37 @@
 KIBANA_URL="http://localhost:5601"
 INDEX_PATTERN="my-logs-*"
 TIME_FIELD="@timestamp"
-RETRY_INTERVAL=5
-MAX_RETRIES=12
+INITIAL_WAIT=10
+RETRY_INTERVAL=10
+MAX_RETRIES=5
 
 check_kibana_status() {
-  status_code=$(curl -s -o /dev/null -w "%{http_code}" "$KIBANA_URL/api/status")
-  if [ "$status_code" -eq 200 ]; then
+  status=$(curl -s -o /dev/null -w "%{http_code}" "$KIBANA_URL/api/status")
+  if [ "$status" -eq 200 ]; then
     return 0
   else
     return 1
   fi
 }
 
-echo "Waiting for Kibana to connect to Elasticsearch..."
-retry_count=0
+/usr/local/bin/kibana-docker &
 
-until check_kibana_status; do
-  if [ "$retry_count" -ge "$MAX_RETRIES" ]; then
-    echo "Kibana did not connect to Elasticsearch within the expected time."
+sleep $INITIAL_WAIT
+
+for ((i=1; i<=MAX_RETRIES; i++)); do
+  if check_kibana_status; then
+    echo "Kibana is ready."
+    break
+  fi
+  if [ "$i" -eq "$MAX_RETRIES" ]; then
+    echo "Kibana did not become ready within the expected time."
     exit 1
   fi
-  echo "Kibana is not ready yet. Retrying in $RETRY_INTERVAL seconds..."
+  echo "Kibana is not ready yet. Retrying in $RETRY_INTERVAL seconds (Attempt $i of $MAX_RETRIES)"
   sleep $RETRY_INTERVAL
-  retry_count=$((retry_count + 1))
 done
 
-echo "Kibana is connected to Elasticsearch."
-
-response=$(curl -s -w "%{http_code}" -o /dev/null -X POST "$KIBANA_URL/api/saved_objects/index-pattern" \
+http_response=$(curl -s -w "\n%{http_code}" -X POST "$KIBANA_URL/api/saved_objects/index-pattern" \
     -H 'kbn-xsrf: true' \
     -H 'Content-Type: application/json' \
     -d "{
@@ -40,8 +43,15 @@ response=$(curl -s -w "%{http_code}" -o /dev/null -X POST "$KIBANA_URL/api/saved
     }
   }")
 
-if [ "$response" -eq 200 ]; then
-    echo "Index pattern '$INDEX_PATTERN' created successfully."
+http_code=$(echo "$http_response" | tail -n1)
+response_body=$(echo "$http_response" | sed '$d')
+
+if [ "$http_code" -eq 200 ] || [ "$http_code" -eq 201 ]; then
+    echo "Index pattern '$INDEX_PATTERN' ready."
 else
-    echo "Failed to create index pattern. HTTP status code: $response"
+    echo "Failed to setup index pattern. HTTP status code: $http_code"
+    echo "Response: $response_body"
+    exit 1
 fi
+
+wait
