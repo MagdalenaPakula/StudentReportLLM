@@ -1,4 +1,4 @@
-# Informacje ogólne
+# Dokumentacja Projektowa - StudentReportLLMs
 
 ## Cel projektu
 
@@ -9,7 +9,7 @@ precyzyjne narzędzie wspomagające proces edukacyjny.
 
 ## Zespół projektowy
 
-- Magdalena Pakuła
+- Magdalena Pakuła 
 - Jakub Pawlak
 - Piotr Hynasiński
 - Artur Pietrzak
@@ -43,8 +43,8 @@ Kluczowymi elementami będą efektywność, precyzja oraz użyteczność systemu
 
 Ważne będzie również stworzenie szczegółowej dokumentacji projektowej.
 
-# Analza wymagań
-
+# Analiza wymagań
+Poniżej znajdują się wszystkie wymagania funkcjonalne i niefunkcjonalne projektu
 ## Wymagania funkcjonalne
 
 1. Zarządzanie kontami użytkowników
@@ -83,6 +83,12 @@ Długotrwałe przechowywanie prac na potrzeby sprawdzania plagiatowego, ze wzgl�
 będą musiały być przechowywane przez indywidualne uczelnie, a projektowany system będzie jedynie uzyskiwać do nich tymczasowy dostęp.
 
 ## Interfejs użytkownika
+Interfejs użytkownika będzie zaprojektowany tak, aby był intuicyjny i łatwy w obsłudze. 
+Użytkownicy będą mogli:
+- Logować i rejestrować się do systemu
+- Przesyłać prace uczniów do oceny
+- Wprowadzać i modyfikować kryteria oceny
+- Przeglądać wyniki ocen i analizy jakościowej
 
 # Harmonogram
 
