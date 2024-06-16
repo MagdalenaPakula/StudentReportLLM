@@ -3,6 +3,7 @@
 \usepackage{hyperref}
 \usepackage{geometry}
 \usepackage{graphicx}
+\usepackage{longtable}
 \geometry{margin=1in}
 \title{Dokumentacja Projektu: \\ Automatyzacja Oceny Sprawozdań Studenckich przy Użyciu Dużych Modeli Językowych (StudentReportLLMs)}
 \vspace{3cm}
@@ -19,6 +20,12 @@
 \begin{document}
 
 \maketitle
+
+\vfill
+\begin{center}
+Przedmiot: Zarządzanie procesem wytwarzania oprogramowania \\
+WFTIMS, Politechnika Łódzka
+\end{center}
 
 \newpage
 \tableofcontents
@@ -43,14 +50,26 @@ Zakres prac obejmuje:
     \item Testowanie i ewaluację systemu.
 \end{itemize}
 
-\section{Terminy i definicje}
+\subsection{Terminy i definicje}
 
-\begin{center}
 \footnotesize
-\begin{tabular}{|p{0.3\textwidth}|p{0.65\textwidth}|}
+\begin{longtable}{|p{0.3\textwidth}|p{0.65\textwidth}|}
 \hline
 \textbf{Termin} & \textbf{Definicja} \\
 \hline
+\endfirsthead
+
+\hline
+\textbf{Termin} & \textbf{Definicja} \\
+\hline
+\endhead
+
+\hline \multicolumn{2}{|r|}{{Kontynuacja na następnej stronie}} \\ \hline
+\endfoot
+
+\hline
+\endlastfoot
+
 LLMs (Large Language Models) & Zaawansowane modele językowe, takie jak GPT-4, BERT, T5, wykorzystywane do analizy i generowania tekstu. \\
 \hline
 Ocena jakości treści & Proces analizy sprawozdań pod kątem poprawności językowej, spójności oraz klarowności przekazywanych informacji. \\
@@ -77,13 +96,20 @@ API (Application Programming Interface) & Interfejs programowania aplikacji, kt�
 \hline
 System odczytu i analizy plików & System zdolny do przetwarzania plików w formatach PDF, Word, LaTeX w celu analizy ich treści przez modele językowe. \\
 \hline
-\end{tabular}
-\end{center}
+\end{longtable}
 
 \subsection{Opis potrzeby}
-Głównym założeniem, a zarazem potrzebą jest wiarygodne, dokładne oraz z jak najmniejszym błędem sprawdzanie prac naukowych napisanych przez usługobiorców akademii, czyli studentów przy pomocy określonego narzędzia. Przy danych z góry kryteriach, program ma zachowywać się w należyty sposób.  Potrzeba zaistniała ze względu na możliwą stronniczość wykładowcy. Oznacza to, że osoby, które chodziły na wykłady, krewni bądź znajomi, osoby faworyzowane przez różne względy mogłyby być oceniane wyżej w porównaniu do reszty, za taką samą pracę. Następnym możliwym zagrożeniem jest błąd ludzki. W danej chwili, przy braku stu-procentowej pewności osoba sprawdzająca może niesłusznie odjąć punkty, podczas gdy rozwiązania, fraza zaproponowana przez studenta jest zupełnie poprawna i vice versa. Następną coraz większą “plagą” jest plagiat oraz paragrafy generowane przez sztuczną inteligencję. To również powinno być rozróżnione oraz wyłapane. Dlatego więc, aby każdy uczeń był równy wobec systemu sprawdzania, potrzebna jest technika, program to zapewniający. Ponadto każde konto uczelniane powinno mieć dostęp do tego rozwiązania, a zatem potrzebna jest autentykacja użytkownika dla studenta oraz nauczyciela, jako pośredniego administratora narzędzia.
+Głównym założeniem, a zarazem potrzebą jest wiarygodne, dokładne oraz z jak najmniejszym błędem sprawdzanie prac naukowych napisanych przez usługobiorców akademii, czyli studentów przy pomocy określonego narzędzia.
+Przy danych z góry kryteriach, program ma zachowywać się w należyty sposób.
+Potrzeba zaistniała ze względu na możliwą stronniczość wykładowcy.
+Oznacza to, że osoby, które chodziły na wykłady, krewni bądź znajomi, osoby faworyzowane przez różne względy mogłyby być oceniane wyżej w porównaniu do reszty, za taką samą pracę.
 
-\subsection{Zidentyfikowani osbiorcy}
+Następnym możliwym zagrożeniem jest błąd ludzki. W danej chwili, przy braku stu-procentowej pewności osoba sprawdzająca może niesłusznie odjąć punkty, podczas gdy rozwiązania, fraza zaproponowana przez studenta jest zupełnie poprawna i vice versa.
+Następną coraz większą “plagą” jest plagiat oraz paragrafy generowane przez sztuczną inteligencję.
+To również powinno być rozróżnione oraz wyłapane. Dlatego więc, aby każdy uczeń był równy wobec systemu sprawdzania, potrzebna jest technika, program to zapewniający.
+Ponadto każde konto uczelniane powinno mieć dostęp do tego rozwiązania, a zatem potrzebna jest autentykacja użytkownika dla studenta oraz nauczyciela, jako pośredniego administratora narzędzia.
+
+\subsection{Zidentyfikowani odbiorcy}
 
 \begin{center}
 \footnotesize
@@ -107,6 +133,7 @@ Ocena ma dotyczyć dwóch kluczowych aspektów: jakości treści i zgodności z 
 którego dotyczy sprawozdanie).
 Dzięki temu możliwe będzie szybkie, obiektywne i dokładne ocenianie treści sprawozdań oraz ich zgodności z wytycznymi projektowymi.
 To rozwiązanie ma potencjał zrewolucjonizować proces oceniania, poprawiając jakość edukacji poprzez wprowadzenie bardziej obiektywnych i zgodnych z wytycznymi ocen.
+
 Wymagane będzie zintegrowanie i wykorzystanie zaawansowanych modeli językowych, bez konieczności ich dodatkowego
 szkolenia (fine-tuning).
 Projekt powinien obejmować funkcjonalność odczytu i analizy plików w formatach PDF, Word, LaTeX. Dodatkowo, system musi
@@ -119,6 +146,7 @@ prac studenckich.
 Ważnym elementem będzie stworzenie intuicyjnego interfejsu użytkownika, który pozwoli na łatwe formułowanie zapytań
 dotyczących specyficznych kryteriów oceny dla ogółu dostępnych prac, takich jak często popełniane błędy czy powtarzające
 się braki w sprawozdaniach.
+
 Kluczowymi elementami będą efektywność, precyzja oraz użyteczność systemu.
 Ważne będzie również stworzenie szczegółowej dokumentacji projektowej.
 
@@ -403,7 +431,7 @@ Diagram SWOT (Strengths, Weaknesses, Opportunities, Threats) pokazany niżej na 
 \end{tabular}
 \end{table}
 
-\subsubsection{Przypadek użycia 5: Ogólne korzystanie z sytemu przez użytkownika}
+\subsubsection{Przypadek użycia 5: Interakcja użytkownika z systemem}
 W tym przypadku przedstawiony będzie diagram przypadku użycia na figurze~\ref{fig:use-case-diagram}.
 
 \begin{figure}[H]
