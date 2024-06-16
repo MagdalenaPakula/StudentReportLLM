@@ -441,8 +441,9 @@ Diagram SWOT (Strengths, Weaknesses, Opportunities, Threats) pokazany niżej na 
 \end{longtable}
 \end{center}
 
-\subsubsection{Przypadek użycia 5: Interakcja użytkownika z systemem}
-Ten przypadek użycia obejmuje wszystkie kroki niezbędne do interakcji użytkownika z systemem oceniania LLM, w tym przesyłanie sprawozdania, ustawianie kryteriów oceny oraz pobieranie wyników oceny. Diagram przypadku użycia jest przedstawiony na Figurze \ref{fig:use-case-diagram}.
+\subsubsection*{Przypadek użycia 5: Interakcja użytkownika z systemem}
+Ten przypadek użycia obejmuje wszystkie kroki niezbędne do interakcji użytkownika z systemem oceniania LLM, w tym przesyłanie sprawozdania, ustawianie kryteriów oceny oraz pobieranie wyników oceny.
+Diagram przypadku użycia jest przedstawiony na figurze \ref{fig:use-case-diagram}.
 
 \subsubsection*{1. Przesyłanie sprawozdania}
 
@@ -527,8 +528,6 @@ Ten przypadek użycia obejmuje wszystkie kroki niezbędne do interakcji użytkow
         \item Klikając na poszczególne kryteria, można zobaczyć szczegółowe informacje zwrotne i obszary do poprawy.
     \end{itemize}
 \end{itemize}
-
-\newpage
 
 \begin{figure}[H]
     \centering
@@ -674,7 +673,7 @@ Ta subsekcja określa punkty końcowe API dla systemu oceny LLM. API umożliwia 
 
 \subsubsection*{Endpoints}
 
-\paragraph{1. Upload Report}
+\paragraph{1. Prześlij raport}
 
 \begin{tabbing}
 \textbf{Endpoint:} \= \texttt{/upload} \\
@@ -697,7 +696,7 @@ Ta subsekcja określa punkty końcowe API dla systemu oceny LLM. API umożliwia 
 \> \> \}}
 \end{tabbing}
 
-\paragraph{2. Set Grading Criteria}
+\paragraph{2. Ustaw kryteria oceniania}
 
 \begin{tabbing}
 \textbf{Endpoint:} \= \texttt{/criteria} \\
@@ -730,7 +729,7 @@ Ta subsekcja określa punkty końcowe API dla systemu oceny LLM. API umożliwia 
 \> \> \}}
 \end{tabbing}
 
-\paragraph{3. Retrieve grading results}
+\paragraph{3. Pobierz wyniki oceniania}
 
 \begin{tabbing}
 \textbf{Endpoint:} \= \texttt{/results/<report\_id>} \\
@@ -753,9 +752,9 @@ Ta subsekcja określa punkty końcowe API dla systemu oceny LLM. API umożliwia 
 \> \> \}}
 \end{tabbing}
 
-\paragraph{4. Error codes}
+\paragraph{4. Kody błędów}
 
-Common Errors:
+Powszechne błędy:
 \begin{itemize}
 \item \textbf{400 Bad Request:} The request could not be understood or was missing required parameters.
 \item \textbf{401 Unauthorized:} Authentication failed or user does not have permissions for the requested operation.
@@ -885,8 +884,8 @@ Plan testów obejmuje szczegółowe scenariusze testowe dla każdej funkcjonalno
 \subsection{Ewaluacja i raportowanie}
 
 Po zakończeniu testów zostanie przeprowadzona ocena ich wyników oraz przygotowany raport z rekomendacjami dotyczącymi dalszych działań. Wszystkie ustalone nieprawidłowości będą korygowane, a system będzie testowany ponownie w celu potwierdzenia poprawności wprowadzonych zmian.
-\newpage
 
+\newpage
 \section{Wdrożenie}
 Proces wdrożenia systemu \textit{StudentReportLLMs} obejmuje szereg kluczowych działań mających na celu zapewnienie płynnego uruchomienia i użytkowania systemu przez jego użytkowników końcowych.
 
