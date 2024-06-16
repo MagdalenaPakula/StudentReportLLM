@@ -5,6 +5,7 @@
 \usepackage{graphicx}
 \usepackage{longtable}
 \geometry{margin=1in}
+
 \title{Dokumentacja Projektu: \\ Automatyzacja Oceny Sprawozdań Studenckich przy Użyciu Dużych Modeli Językowych (StudentReportLLMs)}
 \vspace{3cm}
 \author{
@@ -34,11 +35,13 @@ WFTIMS, Politechnika Łódzka
 \section{Wstęp}
 \subsection{Cel dokumentu}
 Celem niniejszego dokumentu jest przedstawienie szczegółowej dokumentacji projektowej dla systemu Automatyzacja Oceny Sprawozdań Studenckich przy Użyciu Dużych Modeli Językowych (StudentReportLLMs).
+
 Dokument ma na celu opisanie zakresu projektu, jego celów, oraz definicji związanych z projektem.
 Jest on przeznaczony dla wszystkich interesariuszy, w tym członków zespołu projektowego, kadry dydaktycznej oraz potencjalnych użytkowników systemu.
 
 \subsection{Zakres projektu}
 Projekt StudentReportLLMs obejmuje zaprojektowanie i implementację systemu wykorzystującego zaawansowane modele językowe do automatycznej oceny sprawozdań studenckich.
+
 Ocena ma dotyczyć dwóch kluczowych aspektów: jakości treści oraz zgodności z wytycznymi projektowymi (konkretnego zadania, którego dotyczy sprawozdanie).
 System ma również oceniać oryginalność tekstu w celu zapobiegania plagiatom.
 Zakres prac obejmuje:
@@ -106,7 +109,9 @@ Oznacza to, że osoby, które chodziły na wykłady, krewni bądź znajomi, osob
 
 Następnym możliwym zagrożeniem jest błąd ludzki. W danej chwili, przy braku stu-procentowej pewności osoba sprawdzająca może niesłusznie odjąć punkty, podczas gdy rozwiązania, fraza zaproponowana przez studenta jest zupełnie poprawna i vice versa.
 Następną coraz większą “plagą” jest plagiat oraz paragrafy generowane przez sztuczną inteligencję.
-To również powinno być rozróżnione oraz wyłapane. Dlatego więc, aby każdy uczeń był równy wobec systemu sprawdzania, potrzebna jest technika, program to zapewniający.
+To również powinno być rozróżnione oraz wyłapane.
+
+Dlatego więc, aby każdy uczeń był równy wobec systemu sprawdzania, potrzebna jest technika, program to zapewniający.
 Ponadto każde konto uczelniane powinno mieć dostęp do tego rozwiązania, a zatem potrzebna jest autentykacja użytkownika dla studenta oraz nauczyciela, jako pośredniego administratora narzędzia.
 
 \subsection{Zidentyfikowani odbiorcy}
@@ -124,8 +129,16 @@ Student (Uczeń) & Osoba realizująca ofertę uczelni, na której się znajduje 
 \end{tabular}
 \end{center}
 
+\newpage
 \section{Opis systemu}
-Projekt \textit{StudentRaportLLMs} polega na stworzeniu kompleksowego systemu opartego na zaawansowanych modelach językowych, który automatycznie oceni sprawozdania studenckie. System będzie przetwarzał tekst sprawozdań, analizując treść i sprawdzając zgodność z wytycznymi projektowymi lub innymi kryteriami. Na podstawie analizy, system będzie przyznawał oceny, dostosowane do konkretnego zadania lub przedmiotu. Aby zapewnić wiarygodność ocen, wyniki automatycznej oceny będą porównywane z wynikami ręcznie ocenionych sprawozdań, co pozwoli na dostosowanie parametrów oceniania i udoskonalenie procesu. Ponadto, system będzie integrowany z istniejącymi platformami edukacyjnymi, ułatwiając przesyłanie prac i wymianę informacji między studentami a nauczycielami. Projekt będzie elastyczny i przystosowany do zmian w technologiach oraz przepisach prawnych dotyczących ochrony danych osobowych.
+Projekt \textit{StudentRaportLLMs} polega na stworzeniu kompleksowego systemu opartego na zaawansowanych modelach językowych, który automatycznie oceni sprawozdania studenckie.
+System będzie przetwarzał tekst sprawozdań, analizując treść i sprawdzając zgodność z wytycznymi projektowymi lub innymi kryteriami.
+
+Na podstawie analizy, system będzie przyznawał oceny, dostosowane do konkretnego zadania lub przedmiotu.
+Aby zapewnić wiarygodność ocen, wyniki automatycznej oceny będą porównywane z wynikami ręcznie ocenionych sprawozdań, co pozwoli na dostosowanie parametrów oceniania i udoskonalenie procesu.
+
+Ponadto, system będzie integrowany z istniejącymi platformami edukacyjnymi, ułatwiając przesyłanie prac i wymianę informacji między studentami a nauczycielami.
+Projekt będzie elastyczny i przystosowany do zmian w technologiach oraz przepisach prawnych dotyczących ochrony danych osobowych.
 \subsection{Zakres funkcjonalny}
 
 System ma wykorzystywać duże modele językowe do oceny sprawozdań studenckich.
@@ -146,10 +159,10 @@ prac studenckich.
 Ważnym elementem będzie stworzenie intuicyjnego interfejsu użytkownika, który pozwoli na łatwe formułowanie zapytań
 dotyczących specyficznych kryteriów oceny dla ogółu dostępnych prac, takich jak często popełniane błędy czy powtarzające
 się braki w sprawozdaniach.
-
 Kluczowymi elementami będą efektywność, precyzja oraz użyteczność systemu.
 Ważne będzie również stworzenie szczegółowej dokumentacji projektowej.
 
+\newpage
 \section{Wymagania}
 Poniżej znajdują się wszystkie wymagania funkcjonalne i niefunkcjonalne projektu:
 
@@ -186,29 +199,30 @@ Poniżej znajdują się wszystkie wymagania funkcjonalne i niefunkcjonalne proje
     \item Satysfakcjonujący czas weryfikacji pracy przez system
 \end{enumerate}
 
-\subsection{Diagram przepływu danych}
+\subsection{Diagramy}
+\subsubsection*{Diagram przepływu danych}
 DFD są szczególnie przydatne do przedstawienia przepływu danych i procesów w ramach systemu.
 Poniżej na fig.~\ref{fig:dfd} znajduje się diagram przedstawiający, jak przetwarzane są dane w systemie.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{img/DFD}
+    \includegraphics[width=0.6\textwidth]{img/DFD}
     \caption{Diagram przepływu danych w systemie \textit{StudentReportLLMs}}
     \label{fig:dfd}
 \end{figure}
 
-\subsection{Diagram Business Process Model and Notation}
+\subsubsection*{Diagram Business Process Model and Notation}
 BPMN idealnie nadaje się do modelowania procesów biznesowych.
 Poniżej na fig.~\ref{fig:BPMN} znajduje się diagram, który wskaże kluczowe procesy biznesowe związane z funkcjonalnością systemu.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{img/BPMN}
+    \includegraphics[width=0.6\textwidth]{img/BPMN}
     \caption{Diagram Business Process Model and Notation systemu \textit{StudentReportLLMs}}
     \label{fig:BPMN}
 \end{figure}
 
-\subsection{Diagram SWOT}
+\subsubsection*{Diagram SWOT}
 Diagram SWOT (Strengths, Weaknesses, Opportunities, Threats) pokazany niżej na fig.~\ref{fig:swot} pomoże zidentyfikować wewnętrzne mocne strony, słabości oraz zewnętrzne szanse i zagrożenia.
 
 \begin{figure}[H]
@@ -220,13 +234,12 @@ Diagram SWOT (Strengths, Weaknesses, Opportunities, Threats) pokazany niżej na 
 
 \subsection{Opis przypadków użycia}
 
-\subsubsection{Przypadek użycia 1: Przesyłanie raportu do systemu}
+\subsubsection*{Przypadek użycia 1: Przesyłanie raportu do systemu}
 
-\begin{table}[H]
 \footnotesize
-\centering
-\caption{Przypadek użycia: Przesyłanie raportu do systemu}
-\begin{tabular}{|p{0.45\linewidth}|p{0.45\linewidth}|}
+\begin{center}
+\begin{longtable}{|p{0.45\linewidth}|p{0.45\linewidth}|}
+\caption{Przypadek użycia: Przesyłanie raportu do systemu} \\
 \hline
 \textbf{Typ} & Operacyjny \\
 \hline
@@ -270,22 +283,21 @@ Diagram SWOT (Strengths, Weaknesses, Opportunities, Threats) pokazany niżej na 
     \item System powinien być intuicyjny i łatwy w użyciu, aby nauczyciele mogli szybko i bezproblemowo przesyłać raporty.
 \end{itemize} \\
 \hline
-\end{tabular}
-\end{table}
+\end{longtable}
+\end{center}
 
-\subsubsection{Przypadek użycia 2: Automatyczna ocena treści raportów}
+\subsubsection*{Przypadek użycia 2: Automatyczna ocena treści raportów}
 
-\begin{table}[H]
 \footnotesize
-\centering
-\caption{Przypadek użycia: Automatyczna ocena treści raportów}
-\begin{tabular}{|p{0.45\linewidth}|p{0.45\linewidth}|}
+\begin{center}
+\begin{longtable}{|p{0.45\linewidth}|p{0.45\linewidth}|}
+\caption{Przypadek użycia: Automatyczna ocena treści raportów} \\
 \hline
 \textbf{Typ} & Operacyjny \\
 \hline
 \textbf{Użytkownicy} & Nauczyciel akademicki \\
 \hline
-\textbf{Warunki wstępne} & 
+\textbf{Warunki wstępne} &
 \begin{itemize}
     \item Nauczyciel musi być zalogowany do systemu.
     \item Raport studencki musi być w odpowiednim formacie (Word, PDF, LaTeX).
@@ -301,7 +313,7 @@ Diagram SWOT (Strengths, Weaknesses, Opportunities, Threats) pokazany niżej na 
     \item System zapisuje ocenę i feedback w bazie danych oraz powiadamia nauczyciela o zakończonej ocenie.
 \end{enumerate} \\
 \hline
-\textbf{Warunki końcowe} & 
+\textbf{Warunki końcowe} &
 \begin{itemize}
     \item Nauczyciel musi być zalogowany do systemu.
     \item Raport zostaje oceniony i zapisany w systemie.
@@ -324,22 +336,21 @@ Diagram SWOT (Strengths, Weaknesses, Opportunities, Threats) pokazany niżej na 
     \item System powinien zapewniać wysoką dokładność i spójność ocen, aby użytkownicy mogli ufać wynikowym ocenom.
 \end{itemize} \\
 \hline
-\end{tabular}
-\end{table}
+\end{longtable}
+\end{center}
 
-\subsubsection{Przypadek użycia 3: Odczyt i konwersja plików}
+\subsubsection*{Przypadek użycia 3: Odczyt i konwersja plików}
 
-\begin{table}[H]
 \footnotesize
-\centering
-\caption{Przypadek użycia: Odczyt i konwersja plików}
-\begin{tabular}{|p{0.45\linewidth}|p{0.45\linewidth}|}
+\begin{center}
+\begin{longtable}{|p{0.45\linewidth}|p{0.45\linewidth}|}
+\caption{Przypadek użycia: Odczyt i konwersja plików} \\
 \hline
 \textbf{Typ} & Operacyjny \\
 \hline
 \textbf{Użytkownicy} & Nauczyciel akademicki \\
 \hline
-\textbf{Warunki wstępne} & 
+\textbf{Warunki wstępne} &
 \begin{itemize}
     \item Nauczyciel musi być zalogowany do systemu.
     \item Plik raportu musi być przesłany do systemu.
@@ -355,7 +366,7 @@ Diagram SWOT (Strengths, Weaknesses, Opportunities, Threats) pokazany niżej na 
     \item System zapisuje przetworzoną i skonwertowaną wersję pliku w bazie danych oraz informuje nauczyciela o zakończeniu procesu konwersji.
 \end{enumerate} \\
 \hline
-\textbf{Warunki końcowe} & 
+\textbf{Warunki końcowe} &
 \begin{itemize}
     \item Plik raportu jest poprawnie odczytany i skonwertowany.
     \item System zapisuje skonwertowaną wersję pliku w bazie danych.
@@ -378,22 +389,21 @@ Diagram SWOT (Strengths, Weaknesses, Opportunities, Threats) pokazany niżej na 
     \item System powinien informować użytkowników o wszelkich problemach napotkanych podczas odczytu i konwersji plików, umożliwiając szybkie rozwiązanie problemów.
 \end{itemize} \\
 \hline
-\end{tabular}
-\end{table}
+\end{longtable}
+\end{center}
 
-\subsubsection{Przypadek użycia 4: Personalizacja kryteriów oceny}
+\subsubsection*{Przypadek użycia 4: Personalizacja kryteriów oceny}
 
-\begin{table}[H]
 \footnotesize
-\centering
-\caption{Przypadek użycia: Personalizacja kryteriów oceny}
-\begin{tabular}{|p{0.45\linewidth}|p{0.45\linewidth}|}
+\begin{center}
+\begin{longtable}{|p{0.45\linewidth}|p{0.45\linewidth}|}
+\caption{Przypadek użycia: Personalizacja kryteriów oceny} \\
 \hline
 \textbf{Typ} & Operacyjny \\
 \hline
 \textbf{Użytkownicy} & Nauczyciel akademicki \\
 \hline
-\textbf{Warunki wstępne} & 
+\textbf{Warunki wstępne} &
 \begin{itemize}
     \item Nauczyciel musi być zalogowany do systemu.
 \end{itemize} \\
@@ -406,7 +416,7 @@ Diagram SWOT (Strengths, Weaknesses, Opportunities, Threats) pokazany niżej na 
     \item System automatycznie uwzględnia nowe kryteria podczas oceny kolejnych raportów studenckich.
 \end{enumerate} \\
 \hline
-\textbf{Warunki końcowe} & 
+\textbf{Warunki końcowe} &
 \begin{itemize}
     \item Zmodyfikowane kryteria oceny są zapisane i uwzględniane podczas kolejnych ocen raportów studenckich.
     \item Nauczyciel może dostosować proces oceniania do swoich potrzeb lub wymagań projektowych.
@@ -428,19 +438,136 @@ Diagram SWOT (Strengths, Weaknesses, Opportunities, Threats) pokazany niżej na 
     \item Warto umożliwić nauczycielowi podgląd zmian przed ich zatwierdzeniem, aby uniknąć niezamierzonych modyfikacji kryteriów oceny.
 \end{itemize} \\
 \hline
-\end{tabular}
-\end{table}
+\end{longtable}
+\end{center}
 
 \subsubsection{Przypadek użycia 5: Interakcja użytkownika z systemem}
-W tym przypadku przedstawiony będzie diagram przypadku użycia na figurze~\ref{fig:use-case-diagram}.
+Ten przypadek użycia obejmuje wszystkie kroki niezbędne do interakcji użytkownika z systemem oceniania LLM, w tym przesyłanie sprawozdania, ustawianie kryteriów oceny oraz pobieranie wyników oceny. Diagram przypadku użycia jest przedstawiony na Figurze \ref{fig:use-case-diagram}.
+
+\subsubsection*{1. Przesyłanie sprawozdania}
+
+\begin{itemize}
+    \item \textbf{Otwórz aplikację}: Upewnij się, że interfejs użytkownika systemu oceniania LLM jest uruchomiony.
+    \item \textbf{Prześlij sprawozdanie}:
+    \begin{itemize}
+        \item Kliknij przycisk Upload w głównym oknie.
+        \item Wybierz plik sprawozdania (PDF, Word lub LaTeX) z lokalnego systemu.
+        \item Kliknij Open, aby przesłać plik.
+    \end{itemize}
+    \item \textbf{Potwierdzenie}:
+    \begin{itemize}
+        \item Po pomyślnym przesłaniu sprawozdania zostanie wyświetlony komunikat potwierdzający.
+        \item Zanotuj \texttt{report\_id}, ponieważ będzie potrzebny do kolejnych operacji.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{2. Ustawianie kryteriów oceny}
+
+\begin{itemize}
+    \item \textbf{Otwórz okno kryteriów}:
+    \begin{itemize}
+        \item Kliknij przycisk Set Criteria w głównym oknie.
+    \end{itemize}
+    \item \textbf{Definiowanie kryteriów}:
+    \begin{itemize}
+        \item Wprowadź kryteria oceny. Każde kryterium powinno mieć nazwę i wagę.
+        \item Przykład:
+        \begin{verbatim}
+        {
+          "criteria": [
+            {
+              "name": "Jakość treści",
+              "weight": 0.5
+            },
+            {
+              "name": "Zgodność z wytycznymi",
+              "weight": 0.3
+            },
+            {
+              "name": "Oryginalność",
+              "weight": 0.2
+            }
+          ]
+        }
+        \end{verbatim}
+    \end{itemize}
+    \item \textbf{Zapisywanie kryteriów}:
+    \begin{itemize}
+        \item Kliknij przycisk Save, aby zastosować kryteria.
+        \item Wyświetlony zostanie komunikat potwierdzający pomyślne ustawienie kryteriów.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{3. Pobieranie wyników oceny}
+
+\begin{itemize}
+    \item \textbf{Sprawdź wyniki}:
+    \begin{itemize}
+        \item Kliknij przycisk Check Results w głównym oknie.
+        \item Wprowadź \texttt{report\_id} sprawozdania, dla którego chcesz pobrać wyniki.
+    \end{itemize}
+    \item \textbf{Wyświetlanie wyników}:
+    \begin{itemize}
+        \item Wyniki oceny zostaną wyświetlone, pokazując oceny jakości, zgodności i oryginalności.
+        \item Przykładowy format wyników:
+        \begin{verbatim}
+        {
+          "report_id": "<report_id>",
+          "grading": {
+            "quality": 85,
+            "compliance": 90,
+            "originality": 95,
+            "overall": 90
+          }
+        }
+        \end{verbatim}
+    \end{itemize}
+    \item \textbf{Szczegółowa analiza}:
+    \begin{itemize}
+        \item Klikając na poszczególne kryteria, można zobaczyć szczegółowe informacje zwrotne i obszary do poprawy.
+    \end{itemize}
+\end{itemize}
+
+\newpage
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{img/usecase_diagram}
-    \caption{Diagram przypadku użycia \textit{StudentReportLLMs}}
+    \caption{Diagram przypadku użycia: Interakcja użytkownika z systemem w systemie \textit{StudentReportLLMs}}
     \label{fig:use-case-diagram}
 \end{figure}
 
+\subsubsection*{Dodatkowe funkcje}
+
+\begin{itemize}
+    \item \textbf{Analiza wspólnych błędów}: System oferuje analizę częstych błędów we wszystkich sprawozdaniach.
+    \item \textbf{Eksportowanie wyników}: Można eksportować wyniki oceny do pliku CSV lub JSON dla dalszej analizy.
+\end{itemize}
+
+\subsubsection*{Często występujące problemy}
+
+\begin{itemize}
+    \item \textbf{Błędy przy przesyłaniu plików}:
+    \begin{itemize}
+        \item Upewnij się, że format pliku jest obsługiwany (PDF, Word, LaTeX).
+        \item Sprawdź połączenie internetowe i spróbuj ponownie.
+    \end{itemize}
+    \item \textbf{Problem z zapisem kryteriów}:
+    \begin{itemize}
+        \item Upewnij się, że wszystkie kryteria mają poprawne nazwy i wagi.
+        \item Sprawdź, czy nie ma żadnych komunikatów o błędach i popraw dane według potrzeb.
+    \end{itemize}
+    \item \textbf{Brak wyników}:
+    \begin{itemize}
+        \item Zweryfikuj poprawność \texttt{report\_id}.
+        \item Upewnij się, że sprawozdanie zostało ocenione przed próbą pobrania wyników.
+    \end{itemize}
+\end{itemize}
+
+Te kroki zapewniają kompleksową instrukcję użytkowania systemu oceniania LLM, obejmującą wszystkie kluczowe funkcje i możliwości interakcji z systemem.
+
+
+\newpage
 \section{Architektura Systemu}
 W tej sekcji przedstawiono architekturę systemu \textit{StudentReportLLMs}, który ma na celu automatyzację oceny sprawozdań studenckich przy użyciu dużych modeli językowych.
 
@@ -458,24 +585,24 @@ Architektura systemu oparta jest na mikroserwisach, co umożliwia łatwą skalow
 
 Architektura opiera się na komunikacji asynchronicznej oraz zastosowaniu API do integracji poszczególnych komponentów.
 
-\subsection{Diagram komponentów}
+\subsection*{Diagram komponentów}
 
 Poniżej, na figurze~\ref{fig:architecture}, przedstawiono diagram komponentów architektonicznych systemu \textit{StudentReportLLMs}, który ilustruje interakcje między poszczególnymi serwisami:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{img/component_diagram}
+    \includegraphics[width=0.6\textwidth]{img/component_diagram}
     \caption{Diagram komponentów architektonicznych systemu \textit{StudentReportLLMs}}
     \label{fig:architecture}
 \end{figure}
 
 Diagram pokazuje strukturę systemu oraz przepływ danych między serwisami. Frontend komunikuje się z backendem poprzez API, a backend zarządza komunikacją z serwisami modeli językowych oraz bazą danych.
 
-\subsection{Diagram klas}
+\subsection*{Diagram klas}
 Poniżej, na figurze~\ref{fig:class-diagram}, przedstawiono diagram klas systemu \textit{StudentReportLLMs}, który ilustruje klasy i ich relacje:
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{img/class_diagram}
+    \includegraphics[width=0.6\textwidth]{img/class_diagram}
     \caption{Diagram klas h systemu \textit{StudentReportLLMs}}
     \label{fig:class-diagram}
 \end{figure}
@@ -506,6 +633,7 @@ Bezpieczeństwo systemu \textit{StudentReportLLMs} zapewniono poprzez:
 
 Podjęto także środki ostrożności, aby zapewnić zgodność z przepisami o ochronie danych osobowych (GDPR).
 
+\newpage
 \section{Projekt Interfejsu}
 Projekt interfejsu użytkownika (UI) systemu \textit{StudentReportLLMs} ma na celu zapewnienie intuicyjnej, efektywnej i przyjaznej dla użytkownika platformy, umożliwiającej łatwą interakcję studentów oraz nauczycieli z systemem automatycznej oceny sprawozdań studenckich. Interfejs powinien być dostosowany do potrzeb różnych użytkowników, zapewniając transparentność oceniania oraz dostęp do szczegółowych informacji na temat wyników i zaleceń.
 
@@ -536,6 +664,106 @@ Interfejs użytkownika systemu \textit{StudentReportLLMs} będzie zawierać nast
 
 Projekt interfejsu będzie stale ewoluował na podstawie feedbacku użytkowników oraz zmieniających się potrzeb edukacyjnych, zapewniając wysoką użyteczność i satysfakcję z jego użytkowania.
 
+\subsection{Specyfikacja API}
+
+Ta subsekcja określa punkty końcowe API dla systemu oceny LLM. API umożliwia użytkownikom przesyłanie sprawozdań studenckich, ustawianie kryteriów oceny oraz pobieranie wyników oceniania.
+
+\subsubsection*{Base URL}
+
+\texttt{http://StudentReportGrader/api/}
+
+\subsubsection*{Endpoints}
+
+\paragraph{1. Upload Report}
+
+\begin{tabbing}
+\textbf{Endpoint:} \= \texttt{/upload} \\
+\textbf{Method:} \> \texttt{POST} \\
+\textbf{Description:} \> Uploads a student report for grading. \\
+\textbf{Request:} \\
+\> \textbf{Headers:} \\
+\> \> \texttt{Content-Type: multipart/form-data} \\
+\> \textbf{Body:} \\
+\> \> \texttt{file}: The report file to be uploaded (PDF, Word, LaTeX). \\
+\textbf{Response:} \\
+\> \textbf{Success (200):} \\
+\> \> \texttt{\{ \\
+\> \> \> "message": "Report uploaded successfully.", \\
+\> \> \> "report\_id": "<report\_id>" \\
+\> \> \}} \\
+\> \textbf{Error (400/500):} \\
+\> \> \texttt{\{ \\
+\> \> \> "error": "Description of the error." \\
+\> \> \}}
+\end{tabbing}
+
+\paragraph{2. Set Grading Criteria}
+
+\begin{tabbing}
+\textbf{Endpoint:} \= \texttt{/criteria} \\
+\textbf{Method:} \> \texttt{POST} \\
+\textbf{Description:} \> Sets the grading criteria for evaluating reports. \\
+\textbf{Request:} \\
+\> \textbf{Headers:} \\
+\> \> \texttt{Content-Type: application/json} \\
+\> \textbf{Body:} \\
+\> \> \texttt{\{ \\
+\> \> \> "criteria": [ \\
+\> \> \> \> \{ \\
+\> \> \> \> \> "name": "Criterion 1", \\
+\> \> \> \> \> "weight": 0.5 \\
+\> \> \> \> \}, \\
+\> \> \> \> \{ \\
+\> \> \> \> \> "name": "Criterion 2", \\
+\> \> \> \> \> "weight": 0.5 \\
+\> \> \> \> \} \\
+\> \> \> ] \\
+\> \> \}} \\
+\textbf{Response:} \\
+\> \textbf{Success (200):} \\
+\> \> \texttt{\{ \\
+\> \> \> "message": "Criteria set successfully." \\
+\> \> \}} \\
+\> \textbf{Error (400/500):} \\
+\> \> \texttt{\{ \\
+\> \> \> "error": "Description of the error." \\
+\> \> \}}
+\end{tabbing}
+
+\paragraph{3. Retrieve grading results}
+
+\begin{tabbing}
+\textbf{Endpoint:} \= \texttt{/results/<report\_id>} \\
+\textbf{Method:} \> \texttt{GET} \\
+\textbf{Description:} \> Retrieves the grading results for a specific report. \\
+\textbf{Response:} \\
+\> \textbf{Success (200):} \\
+\> \> \texttt{\{ \\
+\> \> \> "report\_id": "<report\_id>", \\
+\> \> \> "grading": \{ \\
+\> \> \> \> "quality": 85, \\
+\> \> \> \> "compliance": 90, \\
+\> \> \> \> "originality": 95, \\
+\> \> \> \> "overall": 90 \\
+\> \> \> \} \\
+\> \> \}} \\
+\> \textbf{Error (400/500):} \\
+\> \> \texttt{\{ \\
+\> \> \> "error": "Description of the error." \\
+\> \> \}}
+\end{tabbing}
+
+\paragraph{4. Error codes}
+
+Common Errors:
+\begin{itemize}
+\item \textbf{400 Bad Request:} The request could not be understood or was missing required parameters.
+\item \textbf{401 Unauthorized:} Authentication failed or user does not have permissions for the requested operation.
+\item \textbf{404 Not Found:} The requested resource could not be found.
+\item \textbf{500 Internal Server Error:} An error occurred on the server.
+\end{itemize}
+
+\newpage
 \section{Testowanie}
 Testowanie systemu \textit{StudentReportLLMs} odgrywa kluczową rolę w zapewnieniu jego niezawodności, funkcjonalności oraz zgodności z wymaganiami. Proces testowania obejmuje szeroki zakres działań mających na celu sprawdzenie każdego aspektu systemu, zarówno pod kątem jego działania technicznego, jak i użyteczności.
 
@@ -657,6 +885,8 @@ Plan testów obejmuje szczegółowe scenariusze testowe dla każdej funkcjonalno
 \subsection{Ewaluacja i raportowanie}
 
 Po zakończeniu testów zostanie przeprowadzona ocena ich wyników oraz przygotowany raport z rekomendacjami dotyczącymi dalszych działań. Wszystkie ustalone nieprawidłowości będą korygowane, a system będzie testowany ponownie w celu potwierdzenia poprawności wprowadzonych zmian.
+\newpage
+
 \section{Wdrożenie}
 Proces wdrożenia systemu \textit{StudentReportLLMs} obejmuje szereg kluczowych działań mających na celu zapewnienie płynnego uruchomienia i użytkowania systemu przez jego użytkowników końcowych.
 
@@ -665,19 +895,85 @@ Proces wdrożenia systemu \textit{StudentReportLLMs} obejmuje szereg kluczowych 
 Pierwszym krokiem w procesie wdrożenia jest przygotowanie odpowiedniego środowiska do uruchomienia systemu. Będzie to obejmować:
 
 \begin{itemize}
-\item Instalacja i konfiguracja serwerów: Zapewnienie odpowiedniej infrastruktury serwerowej, która będzie obsługiwać aplikację oraz przechowywać dane.
-\item Konfiguracja baz danych: Utworzenie i skonfigurowanie odpowiednich baz danych potrzebnych do przechowywania danych użytkowników, sprawozdań studenckich oraz wyników ocen.
-\item Instalacja zewnętrznych zależności: Zapewnienie, że wszystkie zewnętrzne biblioteki, narzędzia i modele językowe, które są niezbędne do działania systemu, są poprawnie zainstalowane i skonfigurowane.
+    \item Instalacja i konfiguracja serwerów: Zapewnienie odpowiedniej infrastruktury serwerowej, która będzie obsługiwać aplikację oraz przechowywać dane.
+    \item Konfiguracja baz danych: Utworzenie i skonfigurowanie odpowiednich baz danych potrzebnych do przechowywania danych użytkowników, sprawozdań studenckich oraz wyników ocen.
+    \item Instalacja zewnętrznych zależności: Zapewnienie, że wszystkie zewnętrzne biblioteki, narzędzia i modele językowe, które są niezbędne do działania systemu, są poprawnie zainstalowane i skonfigurowane.
 \end{itemize}
 
-W celu przedstawienia procesu wdrożenia, poniższy rusynek na~\ref{fig:wdrozenie} przedstawia diagram wdrożenia.
+W celu przedstawienia procesu wdrożenia, poniższy rusunek na~\ref{fig:wdrozenie} przedstawia diagram wdrożenia.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{img/diagram_wdrozenia}
+    \includegraphics[width=0.7\textwidth]{img/diagram_wdrozenia}
     \caption{Diagram wdrożenia systemu \textit{StudentReportLLMs}}
     \label{fig:wdrozenie}
 \end{figure}
+
+\subsection{Przygotowanie środowiska lokalnego}
+
+Przed przystąpieniem do dalszych kroków, należy przygotować środowisko lokalne.
+
+\subsubsection*{Krok 1: Klonowanie repozytorium}
+
+Rozpocznij od sklonowania repozytorium z GitHub:
+\begin{verbatim}
+git clone https://github.com/magdalenpakula/yourproject.git
+cd yourproject
+\end{verbatim}
+
+\subsubsection*{Krok 2: Utworzenie środowiska wirtualnego}
+
+Zaleca się użycie środowiska wirtualnego do zarządzania zależnościami. Możesz je utworzyć za pomocą virtualenv:
+\begin{verbatim}
+python -m venv venv
+source venv/bin/activate   # Na Windows użyj `venv\Scripts\activate`
+\end{verbatim}
+
+\subsubsection*{Krok 3: Instalacja zależności}
+
+Zainstaluj wymagane pakiety Pythona za pomocą pip:
+\begin{verbatim}
+pip install -r requirements.txt
+\end{verbatim}
+
+\subsubsection*{Krok 4: Konfiguracja MongoDB i Qdrant}
+\begin{itemize}
+    \item MongoDB: Upewnij się, że MongoDB jest zainstalowane i uruchomione na Twoim lokalnym komputerze lub zdalnym serwerze. Instrukcje instalacji znajdziesz na oficjalnej stronie MongoDB.
+    \item Qdrant: Zainstaluj i uruchom Qdrant za pomocą Dockera.
+\end{itemize}
+
+\begin{verbatim}
+docker pull qdrant/qdrant
+docker run -p 6333:6333 qdrant/qdrant
+\end{verbatim}
+
+\subsubsection*{Krok 5: Konfiguracja aplikacji}
+
+Utwórz plik .env w katalogu głównym i dodaj następujące konfiguracje:
+\begin{verbatim}
+MONGO_URI=mongodb://localhost:27017
+QDRANT_HOST=localhost
+QDRANT_PORT=6333
+\end{verbatim}
+Dostosuj wartości w zależności od konfiguracji swojego środowiska.
+
+\subsubsection*{Krok 6: Uruchomienie aplikacji}
+
+Aby uruchomić aplikację, wykonaj następujące polecenie:
+\begin{verbatim}
+python src/gui/__init__.py
+\end{verbatim}
+
+\subsubsection*{Krok 7: Uruchomienie testów}
+
+Aby upewnić się, że wszystko jest poprawnie skonfigurowane, uruchom testy jednostkowe:
+\begin{verbatim}
+pytest src/tests/
+\end{verbatim}
+
+\subsubsection*{Dodatkowa konfiguracja (opcjonalna)}
+
+\textbf{Instalacja LaTeX (do przetwarzania plików LaTeX)}: Do przetwarzania plików LaTeX może być konieczna instalacja dystrybucji LaTeX.
 
 \subsection{Testowanie w środowisku produkcyjnym}
 
@@ -694,6 +990,8 @@ Gdy wszystkie powyższe kroki zostaną zakończone pomyślnie, system \textit{St
 \subsection{Monitorowanie i utrzymanie}
 
 Po wdrożeniu systemu będzie kontynuowane monitorowanie jego działania oraz regularne aktualizacje i utrzymywanie systemu. Celem jest zapewnienie wysokiej dostępności, bezpieczeństwa oraz efektywności działania systemu w dłuższym okresie.
+
+\newpage
 \section{Utrzymanie i wsparcie}
 Utrzymanie i wsparcie systemu \textit{StudentReportLLMs} jest kluczowe dla zapewnienia jego stabilności, bezpieczeństwa oraz efektywności w długim okresie użytkowania. Proces utrzymania i wsparcia obejmuje szereg działań mających na celu monitorowanie, utrzymanie oraz ewentualne rozwijanie systemu w odpowiedzi na potrzeby użytkowników.
 
@@ -730,6 +1028,7 @@ Aby system \textit{StudentReportLLMs} pozostał aktualny i efektywny, konieczne 
 \subsection{Zarządzanie dokumentacją}
 
 Aby zapewnić przejrzystość i dostępność informacji, niezbędne jest prowadzenie aktualnej dokumentacji systemu, która zawiera opisy funkcjonalności, procedur obsługi, historię zmian oraz plany rozwoju.
+\newpage
 \section{Zarządzanie projektem}
 \subsection{Harmonogram}
 \begin{center}
@@ -780,5 +1079,6 @@ Dostarczenie dokumentacji technicznej & 5 & 24 & Nie zrobione & 3 \\
 \hline
 \end{tabular}
 \end{center}
+
 
 \end{document}
