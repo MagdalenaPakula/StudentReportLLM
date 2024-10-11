@@ -3,7 +3,7 @@ import docx2txt
 import pdfplumber
 import re
 from src.database.mongo import mongo_collection
-from src.logging.logstash_logger import LogStashLogger
+from lib.logging.logstash_logger import LogStashLogger
 
 logger = LogStashLogger.get_logger()
 
