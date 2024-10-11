@@ -1,7 +1,7 @@
 from src.GUI import app
-from src.logging.logstash_logger import LogStashLogger
+from lib.logging.logstash_logger import LogStashLogger
 
-from src.messaging.rabbitmq import consume_messages, publish_message
+from lib.messaging.rabbitmq import consume_messages, publish_message
 
 
 def consume_task_message(ch, method, properties, body):

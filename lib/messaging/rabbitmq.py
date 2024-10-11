@@ -1,7 +1,7 @@
 import os
 import pika
 
-from src.logging.logstash_logger import LogStashLogger
+from lib.logging.logstash_logger import LogStashLogger
 
 
 logger = LogStashLogger.get_logger()

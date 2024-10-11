@@ -2,21 +2,11 @@ import tempfile
 import unittest
 import os
 
-from unittest.mock import patch
-from zipfile import BadZipFile
-from pdfminer.pdfparser import PDFSyntaxError
-from src.conversion.convert import convert_to_txt
-from src.database.mongo import mongo_collection
-
-import tempfile
-import unittest
-import os
-
 from unittest.mock import patch, MagicMock
 from zipfile import BadZipFile
 from pdfminer.pdfparser import PDFSyntaxError
 from src.conversion.convert import convert_to_txt, save_to_mongodb
-from src.database.mongo import mongo_collection
+from lib.database.mongo import mongo_collection
 
 
 class TestTextConversion(unittest.TestCase):
