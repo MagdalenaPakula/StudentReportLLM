@@ -1,8 +1,8 @@
-version: "3"
-
 services:
   app:
-    build: .
+    build:
+      dockerfile: services/conversion/Dockerfile
+      context: .
     expose:
       - "5000"
     depends_on:
@@ -59,10 +59,8 @@ services:
       - elk
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:7.10.0
+    build: services/logstash
     container_name: logstash
-    volumes:
-      - ./src/elk/logstash/pipeline:/usr/share/logstash/pipeline
     ports:
       - "5044:5044"
     depends_on:
@@ -71,7 +69,7 @@ services:
       - elk
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.10.0
+    build: services/kibana
     container_name: kibana
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
@@ -79,16 +77,11 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
-    entrypoint: ["/bin/bash", "-c", "/usr/share/kibana/setup_kibana.sh"]
-    volumes:
-      - ./src/elk/kibana/setup_kibana.sh:/usr/share/kibana/setup_kibana.sh
     networks:
       - elk
 
   nginx:
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    build: services/nginx
     depends_on:
       - app
     ports:
