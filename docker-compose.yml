@@ -59,8 +59,10 @@ services:
       - elk
 
   logstash:
-    build: services/logstash
+    image: docker.elastic.co/logstash/logstash:8.15.2
     container_name: logstash
+    volumes:
+      - ./services/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
     ports:
       - "5044:5044"
     depends_on:
