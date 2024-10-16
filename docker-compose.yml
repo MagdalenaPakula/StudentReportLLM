@@ -81,7 +81,9 @@ services:
       - elk
 
   nginx:
-    build: services/nginx
+    image: nginx:latest
+    volumes:
+      - ./services/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - app
     ports:
