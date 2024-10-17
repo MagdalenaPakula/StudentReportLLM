@@ -2,5 +2,6 @@
 .vs/
 .idea/
 
-# python virtual environments
+# python virtual environments and misc folders
 venv/
+__pycache__/
