@@ -55,7 +55,7 @@ Adjust the values as necessary based on your environment setup.
 ## Step 6: Running the Application
 To start the application, run the following command:
 ```bash
-    python services/gui/__init__.py
+    python services/gui/main.py
 ```
 This will launch the GUI for the LLM Grading System.
 

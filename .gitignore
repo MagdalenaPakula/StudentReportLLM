@@ -1,1 +1,6 @@
+# IDE configurations
+.vs/
 .idea/
+
+# python virtual environments
+venv/

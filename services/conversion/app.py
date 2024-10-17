@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request
 
-from services.conversion.convert import convert_to_txt
-from lib.messaging.rabbitmq import publish_message
+from conversion.messaging.rabbitmq import publish_message
+
+from conversion.convert import convert_to_txt
 
 app = Flask(__name__)
 

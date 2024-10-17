@@ -1,9 +1,11 @@
 import os
+import re
+
 import docx2txt
 import pdfplumber
-import re
-from lib.database.mongo import mongo_collection
-from lib.logging.logstash_logger import LogStashLogger
+
+from conversion.database.mongo import mongo_collection
+from conversion.logging.logstash_logger import LogStashLogger
 
 logger = LogStashLogger.get_logger()
 
