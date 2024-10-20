@@ -5,12 +5,11 @@ import docx2txt
 import pdfplumber
 
 from conversion.database.mongo import mongo_collection
-from conversion.logging.logstash_logger import LogStashLogger
-
-logger = LogStashLogger.get_logger()
+import logging
 
 
 def save_to_mongodb(collection, file_name, text):
+    logger = logging.getLogger(__name__ + '.save_to_mongodb')
     try:
         document = {
             "file_name": file_name,
@@ -23,6 +22,7 @@ def save_to_mongodb(collection, file_name, text):
 
 
 def convert_to_txt(input_file):
+    logger = logging.getLogger(__name__ + '.convert_to_txt')
     try:
         file_extension = os.path.splitext(input_file)[1].lower()
 
