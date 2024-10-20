@@ -1,7 +1,7 @@
-import os
-import pika
-
 import logging
+import os
+
+import pika
 
 
 def publish_message(exchange_name, routing_key, message):

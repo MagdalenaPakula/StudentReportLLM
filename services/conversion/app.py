@@ -1,12 +1,10 @@
+import logging
+
 from flask import Flask, render_template, request
 
-from conversion.messaging.rabbitmq import publish_message
-
 from conversion.convert import convert_to_txt
-
 from conversion.logging import configure_logging
-
-import logging
+from conversion.messaging.rabbitmq import publish_message
 
 configure_logging()
 app = Flask(__name__)
