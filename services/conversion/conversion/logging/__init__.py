@@ -2,7 +2,7 @@ import logging
 
 from .handlers.console import add_console_handler
 from .handlers.logstash import add_logstash_handler
-
+from .handlers.opentelemetry import add_otel_handler
 
 def configure_logging() -> None:
     """
@@ -12,6 +12,7 @@ def configure_logging() -> None:
     """
     root_logger = logging.getLogger()
     add_console_handler(root_logger)
+    add_otel_handler(root_logger)
 
     logger_settings = {
         'pdfminer': logging.WARNING,
