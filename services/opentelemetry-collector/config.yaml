@@ -4,10 +4,13 @@ receivers:
       grpc:
         endpoint: 0.0.0.0:4317
 exporters:
+  elasticsearch:
+    endpoint: http://elasticsearch:9200
+    logs_index: "my-logs-test"
   debug:
     verbosity: detailed
 service:
   pipelines:
     logs:
       receivers: [otlp]
-      exporters: [debug]
+      exporters: [debug, elasticsearch]
