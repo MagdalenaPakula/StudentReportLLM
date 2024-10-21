@@ -1,13 +1,19 @@
+import logging
+
 from flask import Flask, render_template, request
 
-from src.convertion.convert import convert_to_txt
-from src.messaging.rabbitmq import publish_message
+from conversion.convert import convert_to_txt
+from conversion.logging import configure_logging
+from conversion.messaging.rabbitmq import publish_message
 
+configure_logging()
 app = Flask(__name__)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    logger = logging.getLogger(__name__ + '.index')
+    logger.warning("Dupa %s", 'hehe')
     if request.method == 'POST':
         file = request.files['file']
         if file:
@@ -18,6 +24,7 @@ def index():
                 publish_message(exchange_name='logs', routing_key='', message=text)
                 return f"Converted text: {text}"
             except Exception as e:
+                logger.error(e)
                 return f"Error: {str(e)}"
     return render_template('index.html')
 

@@ -8,6 +8,7 @@ RETRY_INTERVAL=10
 MAX_RETRIES=5
 
 check_kibana_status() {
+  # make a request to kibana status endpoint, writing response code to stdout
   status=$(curl -s -o /dev/null -w "%{http_code}" "$KIBANA_URL/api/status")
   if [ "$status" -eq 200 ]; then
     return 0

@@ -2,21 +2,11 @@ import tempfile
 import unittest
 import os
 
-from unittest.mock import patch
-from zipfile import BadZipFile
-from pdfminer.pdfparser import PDFSyntaxError
-from src.convertion.convert import convert_to_txt
-from src.database.mongo import mongo_collection
-
-import tempfile
-import unittest
-import os
-
 from unittest.mock import patch, MagicMock
 from zipfile import BadZipFile
 from pdfminer.pdfparser import PDFSyntaxError
-from src.convertion.convert import convert_to_txt, save_to_mongodb
-from src.database.mongo import mongo_collection
+from services.conversion.convert import convert_to_txt, save_to_mongodb
+from lib.database.mongo import mongo_collection
 
 
 class TestTextConversion(unittest.TestCase):
@@ -42,7 +32,7 @@ class TestTextConversion(unittest.TestCase):
         # Clean up the temporary directory
         self.temp_dir.cleanup()
 
-    @patch("src.convertion.convert.save_to_mongodb")
+    @patch("services.conversion.convert.save_to_mongodb")
     def test_convert_docx_to_txt(self, mock_save_to_mongodb):
         with patch("docx2txt.process") as mock_docx2txt_process:
             mock_docx2txt_process.side_effect = BadZipFile("File is not a zip file")
@@ -52,7 +42,7 @@ class TestTextConversion(unittest.TestCase):
             # Verify that save_to_mongodb wasn't called
             self.assertFalse(mock_save_to_mongodb.called)
 
-    @patch("src.convertion.convert.save_to_mongodb")
+    @patch("services.conversion.convert.save_to_mongodb")
     def test_convert_pdf_to_txt(self, mock_save_to_mongodb):
         with patch("pdfplumber.open") as mock_pdf_open:
             mock_pdf_open.side_effect = PDFSyntaxError("No /Root object! - Is this really a PDF?")
@@ -62,7 +52,7 @@ class TestTextConversion(unittest.TestCase):
             # Verify that save_to_mongodb wasn't called
             self.assertFalse(mock_save_to_mongodb.called)
 
-    @patch("src.convertion.convert.save_to_mongodb")
+    @patch("services.conversion.convert.save_to_mongodb")
     def test_convert_tex_to_txt(self, mock_save_to_mongodb):
         # Mock the return value of save_to_mongodb
         mock_save_to_mongodb.return_value = MagicMock()
@@ -75,7 +65,7 @@ class TestTextConversion(unittest.TestCase):
             # Verify that save_to_mongodb was called with the correct arguments
             mock_save_to_mongodb.assert_called_once_with(mongo_collection, self.tex_file, expected_text.strip())
 
-    @patch("src.convertion.convert.save_to_mongodb")
+    @patch("services.conversion.convert.save_to_mongodb")
     def test_unsupported_file_format(self, mock_save_to_mongodb):
         with self.assertRaises(ValueError):
             convert_to_txt(self.unsupported_file)

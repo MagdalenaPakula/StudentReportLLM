@@ -7,7 +7,7 @@ This guide provides step-by-step instructions on how to use the LLM Grading Syst
 Make sure you have followed the setup guide and have the application running. The application should be launched using:
 
 ```bash
-    python src/gui/__init__.py
+    python services/gui/main.py
 ```
 
 ## Using the Application

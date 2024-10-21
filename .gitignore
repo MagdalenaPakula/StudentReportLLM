@@ -1,1 +1,7 @@
+# IDE configurations
+.vs/
 .idea/
+
+# python virtual environments and misc folders
+venv/
+__pycache__/
