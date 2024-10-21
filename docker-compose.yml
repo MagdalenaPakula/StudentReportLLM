@@ -15,7 +15,7 @@ services:
       - LOGSTASH_PORT=5044
     networks:
       - app-network
-      - elk
+      - telemetry
 
   mongo:
     image: mongo:latest
@@ -54,7 +54,17 @@ services:
     ports:
       - "9200:9200"
     networks:
-      - elk
+      - telemetry-export
+      - elasticsearch-network
+
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    volumes:
+      - ./services/opentelemetry-collector/config.yaml:/etc/otel/config.yaml
+    command: ["--config=/etc/otel/config.yaml"]
+    networks:
+      - telemetry
+      - telemetry-export
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.15.2
@@ -66,7 +76,8 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elk
+      - telemetry
+      - elasticsearch-network
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.10.0
@@ -84,7 +95,7 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elk
+      - elasticsearch-network
 
   nginx:
     image: nginx:latest
@@ -98,8 +109,9 @@ services:
       - app-network
 
 networks:
-  elk:
-    driver: bridge
+  telemetry:
+  telemetry-export:
+  elasticsearch-network:
   app-network:
     driver: bridge
 
