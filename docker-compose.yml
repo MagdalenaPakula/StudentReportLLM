@@ -13,6 +13,9 @@ services:
       - RABBITMQ_PORT=5672
       - LOGSTASH_HOST=logstash
       - LOGSTASH_PORT=5044
+      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+      - OTEL_SERVICE_NAME=conversion-service
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
     networks:
       - app-network
       - telemetry
