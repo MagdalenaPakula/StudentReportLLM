@@ -1,21 +1,23 @@
+x-otel-autoinstrumentation-env-var: &otel-autoinstrumentation-config
+  OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED: true
+  OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+
+x-rabbitmq: &rabbitmq
+  RABBITMQ_HOST: rabbitmq
+  RABBITMQ_PORT: 5672
+
 services:
-  app:
+  conversion:
     build: services/conversion
-    expose:
-      - "5000"
+    container_name: conversion-service
     depends_on:
       - mongo
       - rabbitmq
       - otel-collector
     environment:
-      - MONGO_URI=mongodb://mongo:27017/
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - LOGSTASH_HOST=logstash
-      - LOGSTASH_PORT=5044
-      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
-      - OTEL_SERVICE_NAME=conversion-service
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      MONGO_URI: mongodb://mongo:27017/
+      OTEL_SERVICE_NAME: conversion-service
+      <<: [*rabbitmq, *otel-autoinstrumentation-config]
     networks:
       - app-network
       - telemetry
@@ -23,8 +25,6 @@ services:
   mongo:
     image: mongo:latest
     container_name: mongo_db
-    ports:
-      - "27017:27017"
     volumes:
       - mongo_data:/data/db
     networks:
@@ -43,19 +43,17 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
     container_name: elasticsearch
     environment:
-      - node.name=elasticsearch
-      - cluster.name=docker-cluster
-      - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      node.name: elasticsearch
+      cluster.name: docker-cluster
+      discovery.type: single-node
+      bootstrap.memory_lock: true
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
       - esdata:/usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
     networks:
       - telemetry-export
       - elasticsearch-network
@@ -64,7 +62,7 @@ services:
     image: otel/opentelemetry-collector-contrib:latest
     volumes:
       - ./services/opentelemetry-collector/config.yaml:/etc/otel/config.yaml
-    command: ["--config=/etc/otel/config.yaml"]
+    command: [ "--config=/etc/otel/config.yaml" ]
     networks:
       - telemetry
       - telemetry-export
@@ -92,7 +90,9 @@ services:
     volumes:
       - ./services/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - app
+      - conversion
+    links:
+      - "conversion:app" # allow to access the conversion service via the alias 'app'
     ports:
       - "4000:4000"
     networks:
@@ -100,6 +100,7 @@ services:
 
 networks:
   telemetry:
+    internal: true
   telemetry-export:
   elasticsearch-network:
   app-network:
