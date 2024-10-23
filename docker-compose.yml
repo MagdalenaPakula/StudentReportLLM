@@ -1,6 +1,7 @@
 x-otel-autoinstrumentation-env-var: &otel-autoinstrumentation-config
   OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED: true
   OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+  OTEL_LOGS_EXPORTER: "otlp"
 
 x-rabbitmq: &rabbitmq
   RABBITMQ_HOST: rabbitmq
@@ -61,7 +62,7 @@ services:
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
     volumes:
-      - ./services/opentelemetry-collector/config.yaml:/etc/otel/config.yaml
+      - ./services/opentelemetry-collector/config.yaml:/etc/otel/config.yaml:ro
     command: [ "--config=/etc/otel/config.yaml" ]
     networks:
       - telemetry
