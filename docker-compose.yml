@@ -67,6 +67,17 @@ services:
     networks:
       - telemetry
       - telemetry-export
+    ports:
+      - "9091:9090"
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./services/prometheus/config.yaml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - telemetry-export
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.10.0

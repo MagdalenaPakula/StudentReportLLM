@@ -3,14 +3,28 @@ receivers:
     protocols:
       grpc:
         endpoint: 0.0.0.0:4317
+
 exporters:
   elasticsearch:
     endpoint: http://elasticsearch:9200
     logs_index: "my-logs-test"
   debug:
     verbosity: detailed
+  prometheus:
+    endpoint: 0.0.0.0:9090
+
 service:
   pipelines:
     logs:
       receivers: [otlp]
       exporters: [debug, elasticsearch]
+
+  # configure internal telemetry of the collector
+  telemetry:
+    metrics:
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: '0.0.0.0'
+                port: 9091
