@@ -12,12 +12,20 @@ exporters:
     verbosity: detailed
   prometheus:
     endpoint: 0.0.0.0:9090
+  otlp/yaeger:
+    endpoint: "yaeger:4317"
+    tls:
+      insecure: true
+
 
 service:
   pipelines:
     logs:
       receivers: [otlp]
       exporters: [debug, elasticsearch]
+    traces:
+      receivers: [otlp]
+      exporters: [otlp/yaeger]
 
   # configure internal telemetry of the collector
   telemetry:
