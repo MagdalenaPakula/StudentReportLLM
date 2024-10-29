@@ -5,8 +5,7 @@ import re
 import docx2txt
 import pdfplumber
 
-from conversion.database.mongo import mongo_collection
-
+from services.conversion.conversion.database.mongo import mongo_collection
 
 def save_to_mongodb(collection, file_name, text):
     logger = logging.getLogger(__name__ + '.save_to_mongodb')
