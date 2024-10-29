@@ -23,6 +23,9 @@ service:
     logs:
       receivers: [otlp]
       exporters: [debug, elasticsearch]
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus]
     traces:
       receivers: [otlp]
       exporters: [otlp/yaeger]
