@@ -12,37 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      mongo:
-        image: mongo:latest
-        ports:
-          - 27017:27017
-        options: >
-          --mount type=volume,source=mongo_data,target=/data/db
-
-      rabbitmq:
-        image: rabbitmq:3-management
-        ports:
-          - 5672:5672
-          - 15672:15672
-
-      elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
-        env:
-          ES_JAVA_OPTS: "-Xms512m -Xmx512m"
-        ports:
-          - 9200:9200
-
-      logstash:
-        image: docker.elastic.co/logstash/logstash:8.15.2
-        ports:
-          - 5044:5044
-
-      kibana:
-        image: docker.elastic.co/kibana/kibana:7.10.0
-        ports:
-          - 5601:5601
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -56,14 +25,19 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Build and push Docker images
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: llmproject/studentreportllm:latest
+      - name: Build Docker images using Docker Compose
+        run: docker-compose -f docker-compose.yml build
+
+      - name: Start services with Docker Compose
+        run: docker-compose -f docker-compose.yml up -d
 
       - name: Run tests
-        run: |
-                docker run --rm llmproject/studentreportllm:latest python -m unittest discover -s tests
+        run: docker-compose -f docker-compose.yml run app python -m unittest discover -s tests
 
+      - name: Shutdown services
+        run: docker-compose -f docker-compose.yml down
+
+      - name: Push Docker images to Docker Hub
+        run: |
+          docker tag llmproject/studentreportllm:latest ${{ secrets.DOCKER_HUB_USERNAME }}/studentreportllm:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/studentreportllm:latest
