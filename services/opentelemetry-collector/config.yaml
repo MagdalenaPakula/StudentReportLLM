@@ -22,7 +22,7 @@ service:
   pipelines:
     logs:
       receivers: [otlp]
-      exporters: [debug, elasticsearch]
+      exporters: [elasticsearch]
     metrics:
       receivers: [otlp]
       exporters: [prometheus]
