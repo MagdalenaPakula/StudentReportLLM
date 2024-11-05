@@ -25,18 +25,11 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: SonarQube/Cloud Analysis
+      - name: SonarQube/Cloud Scan
+        uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openjdk-11-jre
-            
-          sonar-scanner \
-            -Dsonar.projectKey=StudentReportLLM \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=$SONAR_TOKEN
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
       - name: Build and Tag Docker Images
         run: |
