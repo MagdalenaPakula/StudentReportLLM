@@ -28,7 +28,7 @@ jobs:
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-action@v1
         with:
-          sonar-project-key: 'studentreportllm'
+          sonar-project-key: 'StudentReportLLM'
           sonar-project-name: 'StudentReportLLM'
           sonar-host-url: 'https://sonarcloud.io'
           sonar-login: ${{ secrets.SONAR_TOKEN }}
