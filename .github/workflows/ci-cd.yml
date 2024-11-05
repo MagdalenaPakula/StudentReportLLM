@@ -27,9 +27,13 @@ jobs:
 
       - name: SonarQube/Cloud Scan
         uses: sonarsource/sonarqube-scan-action@master
+        with:
+          args: >
+            -Dsonar.projectKey=StudentReportLLM  
+            -Dsonar.organization=StudentReportLLM  
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
       - name: Build and Tag Docker Images
         run: |
