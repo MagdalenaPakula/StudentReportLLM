@@ -30,7 +30,7 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=StudentReportLLM  
-            -Dsonar.organization=StudentReportLLM  
+            -Dsonar.organization=studentreportllm  
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
