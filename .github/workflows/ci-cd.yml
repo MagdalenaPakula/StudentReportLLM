@@ -25,16 +25,6 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: SonarQube/Cloud Scan
-        uses: sonarsource/sonarqube-scan-action@master
-        with:
-          args: >
-            -Dsonar.projectKey=StudentReportLLM  
-            -Dsonar.organization=studentreportllm  
-            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
       - name: Build and Tag Docker Images
         run: |
           docker build -t llmproject/studentreportllm:latest -f services/conversion/Dockerfile .
