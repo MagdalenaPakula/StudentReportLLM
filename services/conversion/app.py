@@ -6,6 +6,10 @@ from conversion.convert import convert_to_txt
 from conversion.logging import configure_logging
 from conversion.messaging.rabbitmq import publish_message
 
+from opentelemetry import trace
+
+tracer = trace.get_tracer(__name__)
+
 configure_logging()
 app = Flask(__name__)
 

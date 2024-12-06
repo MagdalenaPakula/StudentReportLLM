@@ -11,5 +11,5 @@ COPY . .
 
 EXPOSE 5000
 
-# Run the Flask application
-CMD ["flask", "run", "--host=0.0.0.0"]
+# Run the Flask application with opentelemetry instrumentation
+CMD ["opentelemetry-instrument", "flask", "run", "--host=0.0.0.0"]
