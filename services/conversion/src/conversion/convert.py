@@ -31,7 +31,7 @@ def save_to_mongodb(collection, file_name, text):
         logger.error(f"Error inserting document: {e}")
 
 
-def convert_to_txt(input_file) -> Optional[str]:
+def convert_to_txt(input_file) -> str:
     logger = logging.getLogger(__name__ + '.convert_to_txt')
 
     file_extension = os.path.splitext(input_file)[1].lower()
@@ -39,13 +39,14 @@ def convert_to_txt(input_file) -> Optional[str]:
     if file_extension not in [".docx", ".tex", ".pdf"]:
         logger.warning("Unsupported file format for file %s", input_file)
         failed_conversions.add(1, {"conversion.document.type": "other"})
+        raise ValueError(f"Unsupported file format: {file_extension}")
 
     attributes = {
         "conversion.document.type": file_extension
     }
 
     try:
-        with tracer.start_as_current_span("conversion", attributes=attributes):
+        with tracer.start_as_current_span("conversion", attributes=attributes) as span:
             span: Span
             try:
                 if file_extension == ".docx":
@@ -58,9 +59,10 @@ def convert_to_txt(input_file) -> Optional[str]:
                     # Should never happen, because format is checked beforehand
                     raise Exception(f"Unsupported file format: {file_extension}")
             except Exception as e:
+                # catch exception to register it in span, then rethrow
                 span.set_attributes({
                     "exception.message": str(e),
-                    "exception.type": type(e),
+                    "exception.type": str(type(e)),
                     "exception.stacktrace": traceback.format_exc(),
                 })
                 span.set_status(SpanStatusCode.ERROR)
@@ -72,8 +74,10 @@ def convert_to_txt(input_file) -> Optional[str]:
         return text
 
     except Exception as e:
-        logger.error(f"Error during conversion for file {input_file}: {e}")
+        # catch exception to log it and register failed conversion; then, rethrow
+        logger.error(f"Error during conversion for file {input_file}: {str(e)}")
         failed_conversions.add(1, attributes=attributes)
+        raise
 
 
 def convert_from_pdf(input_file, logger):
