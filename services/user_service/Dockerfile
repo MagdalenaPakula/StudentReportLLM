@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN ["opentelemetry-bootstrap", "-a", "install"]
 
 # copy the current service source code
-COPY . .
+COPY src .
 
 EXPOSE 5000
 
