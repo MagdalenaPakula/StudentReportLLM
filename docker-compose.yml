@@ -25,6 +25,16 @@ services:
       - app-network
       - telemetry
 
+  user_service:
+    build: services/user_service
+    container_name: user-service
+    depends_on:
+      - rabbitmq
+      - otel-collector
+    environment:
+      OTEL_SERVICE_NAME: user-service
+      <<: [*rabbitmq, *otel-autoinstrumentation-config]
+
   mongo:
     image: mongo:latest
     container_name: mongo_db

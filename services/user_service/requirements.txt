@@ -1,0 +1,4 @@
+Flask~=3.0.3
+flask_http_middleware~=0.4.2
+opentelemetry-distro[otlp]
+opentelemetry-instrumentation
