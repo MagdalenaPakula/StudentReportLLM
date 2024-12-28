@@ -4,12 +4,10 @@ from flask import Flask, render_template, request
 from flask_http_middleware import MiddlewareManager
 from opentelemetry import trace
 
-from conversion.logging import configure_logging
 from middleware import RequestTimingMiddleware
 
 tracer = trace.get_tracer(__name__)
 
-configure_logging()
 app = Flask(__name__)
 app.wsgi_app = MiddlewareManager(app)
 app.wsgi_app.add_middleware(RequestTimingMiddleware)
@@ -19,22 +17,46 @@ app.wsgi_app.add_middleware(RequestTimingMiddleware)
 def index():
     return render_template('index.html')
 
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    if 'file' not in request.files:
-        return 'Request does not contain file', 400
+    try:
+        if 'file' not in request.files:
+            return 'Request does not contain file', 400
 
-    file = request.files['file']
-    if file.filename == '':
-        return 'No file selected', 400
+        file = request.files['file']
+        file_name = file.filename
+        if file_name == '':
+            return 'No file selected', 400
 
-    file.save(f"/tmp/uploads/{file.filename}")
+        app.logger.info(f"Received file {file_name}")
+        file_contents = file.read()
 
-    # todo: Assign unique ID for this work
-    # todo: Publish file to rabbitmq
+        # todo: Assign unique ID for this work
+        # todo: Publish file to rabbitmq
 
-    # HTTP 202 - Accepted, because file is sent for further processing, but not yet processed
-    return 'Request accepted', 202
+        # HTTP 202 - Accepted, because file is sent for further processing, but not yet processed
+        return 'Request accepted', 202
+    except Exception as e:
+        app.logger.error(str(e))
+        return f"Internal error: {str(e)}", 500
+
+
+def configure_logging():
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.INFO)
+    app.logger.setLevel(logging.NOTSET)
+
+    # setup console logging
+    hanlder = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s <%(name)s> [%(levelname)s] %(message)s')
+    hanlder.setFormatter(formatter)
+    root_logger.addHandler(hanlder)
+
+def create_app() -> Flask:
+    configure_logging()
+    app.logger.info("Starting user service")
+    return app
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=5000, debug=True)
+    create_app().run(host='0.0.0.0', port=5000, debug=False)

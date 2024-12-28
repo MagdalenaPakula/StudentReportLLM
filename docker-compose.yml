@@ -34,6 +34,11 @@ services:
     environment:
       OTEL_SERVICE_NAME: user-service
       <<: [*rabbitmq, *otel-autoinstrumentation-config]
+    networks:
+      - app-network
+      - telemetry
+    ports:
+      - "3000:5000"
 
   mongo:
     image: mongo:latest
@@ -121,11 +126,11 @@ services:
     volumes:
       - ./services/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - conversion
+      - user_service
     links:
-      - "conversion:app" # allow to access the conversion service via the alias 'app'
+      - "user_service:app" # allow to access the user service via the alias 'app'
     ports:
-      - "4000:4000"
+      - "4000:80"
     networks:
       - app-network
 
