@@ -2,6 +2,8 @@ x-otel-autoinstrumentation-env-var: &otel-autoinstrumentation-config
   OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED: true
   OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
   OTEL_LOGS_EXPORTER: "otlp"
+  OTEL_TRACES_EXPORTER: "otlp"
+  OTEL_METRICS_EXPORTER: "otlp"
 
 x-rabbitmq: &rabbitmq
   RABBITMQ_HOST: rabbitmq
@@ -18,7 +20,7 @@ services:
     environment:
       MONGO_URI: mongodb://mongo:27017/
       OTEL_SERVICE_NAME: conversion-service
-      <<: [*rabbitmq, *otel-autoinstrumentation-config]
+      <<: [ *rabbitmq, *otel-autoinstrumentation-config ]
     networks:
       - app-network
       - telemetry
@@ -67,6 +69,24 @@ services:
     networks:
       - telemetry
       - telemetry-export
+    ports:
+      - "9091:9090"
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./services/prometheus/config.yaml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - telemetry-export
+
+  yaeger:
+    image: jaegertracing/all-in-one
+    networks:
+      - telemetry-export
+    ports:
+      - "16686:16686"
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.10.0

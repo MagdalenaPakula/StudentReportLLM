@@ -1,23 +1,25 @@
 import logging
 
 from flask import Flask, render_template, request
+from flask_http_middleware import MiddlewareManager
+from opentelemetry import trace
 
 from conversion.convert import convert_to_txt
 from conversion.logging import configure_logging
 from conversion.messaging.rabbitmq import publish_message
-
-from opentelemetry import trace
+from middleware import RequestTimingMiddleware
 
 tracer = trace.get_tracer(__name__)
 
 configure_logging()
 app = Flask(__name__)
+app.wsgi_app = MiddlewareManager(app)
+app.wsgi_app.add_middleware(RequestTimingMiddleware)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     logger = logging.getLogger(__name__ + '.index')
-    logger.warning("Dupa %s", 'hehe')
     if request.method == 'POST':
         file = request.files['file']
         if file:
