@@ -47,13 +47,14 @@ services:
       - app-network
 
   rabbitmq:
-    image: rabbitmq:3-management
+    build: services/rabbitmq
     container_name: rabbitmq
     ports:
       - "${RABBITMQ_AMQP_PORT:-5672}:${RABBITMQ_AMQP_PORT:-5672}" # AMQP without TLS
       - "${RABBITMQ_UI_PORT:-15672}:15672" # http management UI without TLS
     networks:
       - app-network
+      - telemetry
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
