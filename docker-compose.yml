@@ -7,7 +7,7 @@ x-otel-autoinstrumentation-env-var: &otel-autoinstrumentation-config
 
 x-rabbitmq: &rabbitmq
   RABBITMQ_HOST: rabbitmq
-  RABBITMQ_PORT: 5672
+  RABBITMQ_PORT: ${RABBITMQ_AMQP_PORT:-5672}
 
 services:
   conversion:
@@ -37,8 +37,6 @@ services:
     networks:
       - app-network
       - telemetry
-    ports:
-      - "3000:5000"
 
   mongo:
     image: mongo:latest
@@ -52,8 +50,8 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq
     ports:
-      - "5672:5672" # AMQP without TLS
-      - "15672:15672" # http management UI without TLS
+      - "${RABBITMQ_AMQP_PORT:-5672}:${RABBITMQ_AMQP_PORT:-5672}" # AMQP without TLS
+      - "${RABBITMQ_UI_PORT:-15672}:15672" # http management UI without TLS
     networks:
       - app-network
 
@@ -90,7 +88,7 @@ services:
   prometheus:
     image: prom/prometheus
     ports:
-      - "9090:9090"  # prometheus web UI
+      - "${PROMETHEUS_UI_PORT:-9090}:9090"  # prometheus web UI
     volumes:
       - ./services/prometheus/config.yaml:/etc/prometheus/prometheus.yml:ro
     networks:
@@ -101,7 +99,7 @@ services:
     networks:
       - telemetry-export
     ports:
-      - "16686:16686"  # yaeger web UI
+      - "${YAEGER_UI_PORT:-16686}:16686"  # yaeger web UI
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.10.0
@@ -130,7 +128,7 @@ services:
     links:
       - "user_service:app" # allow to access the user service via the alias 'app'
     ports:
-      - "4000:80"
+      - "${NGINX_EXPOSED_PORT:?Port to run application on not set}:80"
     networks:
       - app-network
 
