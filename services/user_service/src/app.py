@@ -5,6 +5,7 @@ from flask_http_middleware import MiddlewareManager
 from opentelemetry import trace
 
 from middleware import RequestTimingMiddleware
+from rabbitmq import send_file
 
 tracer = trace.get_tracer(__name__)
 
@@ -33,7 +34,7 @@ def upload_file():
         file_contents = file.read()
 
         # todo: Assign unique ID for this work
-        # todo: Publish file to rabbitmq
+        send_file(file_contents)
 
         # HTTP 202 - Accepted, because file is sent for further processing, but not yet processed
         return 'Request accepted', 202
