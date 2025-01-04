@@ -17,8 +17,8 @@ runs:
     - name: Build Docker image
       run: |
         if [ -z "${{ inputs.dockerfile }}" ]; then
-          docker build ${{ inputs.context }}
+          docker build --check ${{ inputs.context }}
         else
-          docker build -f ${{ inputs.dockerfile }} ${{ inputs.context }}
+          docker build --check -f ${{ inputs.dockerfile }} ${{ inputs.context }}
         fi
       shell: bash
