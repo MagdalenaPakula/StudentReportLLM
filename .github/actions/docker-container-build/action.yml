@@ -6,7 +6,6 @@ inputs:
   dockerfile:
     description: "Location of the Dockerfile"
     required: false
-    default: ""
 outputs:
   build-status:
     description: "Status of the docker build"
@@ -14,11 +13,10 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Build Docker image
-      run: |
-        if [ -z "${{ inputs.dockerfile }}" ]; then
-          docker build --check ${{ inputs.context }}
-        else
-          docker build --check -f ${{ inputs.dockerfile }} ${{ inputs.context }}
-        fi
-      shell: bash
+    - name: Setup docker buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Build docker container
+      uses: docker/build-push-action@v6
+      with:
+        context: ${{ inputs.context }}
+        file: ${{ inputs.file }}
