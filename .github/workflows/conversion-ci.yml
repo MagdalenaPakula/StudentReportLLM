@@ -1,0 +1,18 @@
+name: "CI/CD pipeline for conversion service"
+on:
+  push:
+    paths:
+      - 'services/conversion/**'
+  pull_request:
+    paths:
+      - 'services/conversion/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check docker build
+        uses: .github/actions/docker-container-build
+        with:
+          context: 'services/conversion'
