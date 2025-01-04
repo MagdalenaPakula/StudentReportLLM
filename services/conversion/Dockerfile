@@ -6,7 +6,7 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-Run ["opentelemetry-bootstrap", "-a", "install"]
+RUN ["opentelemetry-bootstrap", "-a", "install"]
 
 # copy the current service source code
 COPY src .
