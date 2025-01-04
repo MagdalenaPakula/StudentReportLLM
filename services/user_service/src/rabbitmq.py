@@ -30,9 +30,20 @@ def _get_connection_parameters() -> pika.ConnectionParameters:
 _connection_parameters = _get_connection_parameters()
 
 
+def _get_publish_queue() -> str:
+    queue_name = os.getenv('RABBITMQ_PUBLISH_QUEUE')
+    if queue_name is None:
+        logging.fatal('Environment variable PUBLISH_QUEUE is not set')
+        sys.exit(1)
+    return queue_name
+
+
+_publish_queue = _get_publish_queue()
+
+
 def send_file(file_contents: Any) -> None:
     exchange_name = ''
-    routing_key = 'documents.unconverted'
+    routing_key = _publish_queue
 
     with tracer.start_as_current_span(f'publish {exchange_name}', kind=SpanKind.PRODUCER, attributes={
         'messaging.operation.type': 'send',
@@ -58,7 +69,7 @@ def send_file(file_contents: Any) -> None:
             channel = connection.channel()
             span.add_event('Channel opened')
 
-            channel.queue_declare(queue='documents.unconverted')
+            channel.queue_declare(queue=_publish_queue)
             channel.basic_publish(exchange=exchange_name, routing_key=routing_key, body=document_body_b64)
 
             span.add_event("Message published")

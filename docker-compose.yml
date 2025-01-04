@@ -20,6 +20,7 @@ services:
     environment:
       MONGO_URI: mongodb://mongo:27017/
       OTEL_SERVICE_NAME: conversion-service
+      RABBITMQ_RECV_QUEUE: ${QUEUE_UNCONVERTED_DOCUMENTS}
       <<: [ *rabbitmq, *otel-autoinstrumentation-config ]
     networks:
       - app-network
@@ -33,6 +34,7 @@ services:
       - otel-collector
     environment:
       OTEL_SERVICE_NAME: user-service
+      RABBITMQ_PUBLISH_QUEUE: ${QUEUE_UNCONVERTED_DOCUMENTS}
       <<: [*rabbitmq, *otel-autoinstrumentation-config]
     networks:
       - app-network
