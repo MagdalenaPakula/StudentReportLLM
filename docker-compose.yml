@@ -7,12 +7,15 @@ services:
       - mongo
       - rabbitmq
       - logstash
+      - qdrant
     environment:
       - MONGO_URI=mongodb://mongo:27017/
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
       - LOGSTASH_HOST=logstash
       - LOGSTASH_PORT=5044
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
     networks:
       - app-network
       - elk
@@ -24,6 +27,18 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - app-network
+
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT__STORAGE__PATH=/qdrant/storage
     networks:
       - app-network
 
@@ -106,3 +121,4 @@ networks:
 volumes:
   mongo_data:
   esdata:
+  qdrant_data:
