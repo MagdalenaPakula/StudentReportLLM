@@ -21,3 +21,4 @@ runs:
         else
           docker build -f ${{ inputs.dockerfile }} ${{ inputs.context }}
         fi
+      shell: bash
