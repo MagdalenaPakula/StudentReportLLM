@@ -2,11 +2,11 @@ import base64
 import logging
 import os
 import sys
-from typing import Any
 
 import pika
 from opentelemetry import trace
 from opentelemetry.trace import Span, SpanKind
+from pika.spec import BasicProperties
 
 logger = logging.getLogger(__name__)
 tracer = trace.get_tracer(__name__)
@@ -41,7 +41,7 @@ def _get_publish_queue() -> str:
 _publish_queue = _get_publish_queue()
 
 
-def send_file(file_contents: Any) -> None:
+def send_file(file_name: str, file_contents: bytes) -> None:
     exchange_name = ''
     routing_key = _publish_queue
 
@@ -55,6 +55,7 @@ def send_file(file_contents: Any) -> None:
         try:
             with tracer.start_as_current_span('Base64 encode'):
                 document_body_b64 = base64.b64encode(file_contents)
+            logger.debug(f"Converted message body {file_contents} to base 64: {document_body_b64}")
         except Exception as e:
             logger.error("Error while encoding file to base64: " + str(e))
             span.record_exception(e, escaped=True)
@@ -67,10 +68,22 @@ def send_file(file_contents: Any) -> None:
             span.add_event('Connection created')
 
             channel = connection.channel()
-            span.add_event('Channel opened')
-
             channel.queue_declare(queue=_publish_queue)
-            channel.basic_publish(exchange=exchange_name, routing_key=routing_key, body=document_body_b64)
+            span.add_event('Queue ready')
+
+            properties = BasicProperties(
+                content_encoding='base64',
+                content_type='application/octet-stream',
+                headers={
+                    'x-file-name': file_name,
+                },
+            )
+            channel.basic_publish(
+                exchange=exchange_name,
+                routing_key=routing_key,
+                properties=properties,
+                body=document_body_b64,
+            )
 
             span.add_event("Message published")
             logger.info(f"File published to rabbitmq exchange {exchange_name} with key {routing_key}")

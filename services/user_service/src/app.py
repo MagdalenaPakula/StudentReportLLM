@@ -34,7 +34,7 @@ def upload_file():
         file_contents = file.read()
 
         # todo: Assign unique ID for this work
-        send_file(file_contents)
+        send_file(file_name, file_contents)
 
         # HTTP 202 - Accepted, because file is sent for further processing, but not yet processed
         return 'Request accepted', 202
