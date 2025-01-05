@@ -1,0 +1,13 @@
+name: "Run static analysis"
+inputs:
+  project_dir:
+    description: "Root directory of the project."
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: "TODO"  # todo: Implement sonar scan
+      run: |
+        echo TODO: Run sonar scan in ${{ inputs.project_dir }}
+      shell: bash

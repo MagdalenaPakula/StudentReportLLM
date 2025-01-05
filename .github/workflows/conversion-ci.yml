@@ -8,6 +8,8 @@ on:
       - 'services/conversion/**'
   workflow_dispatch:
 
+env:
+  project_dir: 'services/conversion'
 
 jobs:
   build:
@@ -17,10 +19,27 @@ jobs:
       - name: Check docker build
         uses: ./.github/actions/docker-check-build
         with:
-          context: 'services/conversion'
+          context: ${{ env.project_dir }}
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run unit tests
+        uses: ./.github/actions/run-python-tests
+        with:
+          project_dir: ${{ env.project_dir }}
+      - name: Run static code analysis
+        uses: ./.github/actions/static-analysis
+        with:
+          project_dir: ${{ env.project_dir }}
+
   integration-tests:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [ build, unit-tests ]
     steps:
+      - uses: actions/checkout@v3
       - name: Check docker compose
         uses: ./.github/actions/check-docker-compose
+
+  # todo: deploy

@@ -1,0 +1,13 @@
+name: "Run unit tests"
+inputs:
+  project_dir:
+    description: "Root directory of the project. Should contain `src` and `test` directories."
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: "TODO"  # todo: Implement running python tests as github actions
+      run: |
+        echo TODO: Run tests in ${{ inputs.project_dir }}
+      shell: bash
