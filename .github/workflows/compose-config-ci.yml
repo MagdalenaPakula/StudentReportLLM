@@ -1,0 +1,14 @@
+name: "Docker compose configuration CI"
+on:
+  push:
+    paths: 'docker-compose.yml'
+  pull_request:
+    paths: 'docker-compose.yml'
+  workflow_dispatch:
+
+jobs:
+  check-compose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check docker compose
+        uses: ./.github/actions/check-docker-compose
