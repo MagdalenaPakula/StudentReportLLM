@@ -4,8 +4,10 @@ import re
 
 import docx2txt
 import pdfplumber
+import openai
 
 from conversion.database.mongo import mongo_collection
+from conversion.database.qdrant import qdrant_collection
 
 
 def save_to_mongodb(collection, file_name, text):
@@ -19,6 +21,27 @@ def save_to_mongodb(collection, file_name, text):
         logger.info(f"Inserted document with ID: {result.inserted_id}")
     except Exception as e:
         logger.error(f"Error inserting document: {e}")
+
+def save_to_qdrant(collection, file_name, text):
+    logger = logging.getLogger(__name__ + '.save_to_qdrant')
+    try:
+        document = {
+            "file_name": file_name,
+            "text": text
+        }
+        result = collection.insert_one(document)
+        logger.info(f"Inserted document with ID: {result.inserted_id}")
+    except Exception as e:
+        logger.error(f"Error inserting document: {e}")
+
+def generate_embedding(text):
+    openai.api_key = ""
+    response = openai.Embedding.create(
+        input=text,
+        model="text-embedding-ada-002"
+    )
+    return response['data'][0]['embedding']
+
 
 
 def convert_to_txt(input_file):

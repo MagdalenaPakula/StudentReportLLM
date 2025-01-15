@@ -1,33 +1,44 @@
-x-otel-autoinstrumentation-env-var: &otel-autoinstrumentation-config
-  OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED: true
-  OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
-  OTEL_LOGS_EXPORTER: "otlp"
-
-x-rabbitmq: &rabbitmq
-  RABBITMQ_HOST: rabbitmq
-  RABBITMQ_PORT: 5672
-
 services:
-  conversion:
+  app:
     build: services/conversion
-    container_name: conversion-service
+    expose:
+      - "5000"
     depends_on:
       - mongo
       - rabbitmq
-      - otel-collector
+      - logstash
+      - qdrant
     environment:
-      MONGO_URI: mongodb://mongo:27017/
-      OTEL_SERVICE_NAME: conversion-service
-      <<: [*rabbitmq, *otel-autoinstrumentation-config]
+      - MONGO_URI=mongodb://mongo:27017/
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - LOGSTASH_HOST=logstash
+      - LOGSTASH_PORT=5044
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
     networks:
       - app-network
-      - telemetry
+      - elk
 
   mongo:
     image: mongo:latest
     container_name: mongo_db
+    ports:
+      - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - app-network
+
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT__STORAGE__PATH=/qdrant/storage
     networks:
       - app-network
 
@@ -44,29 +55,33 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
     container_name: elasticsearch
     environment:
-      node.name: elasticsearch
-      cluster.name: docker-cluster
-      discovery.type: single-node
-      bootstrap.memory_lock: true
-      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      - node.name=elasticsearch
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
       - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
     networks:
-      - telemetry-export
-      - elasticsearch-network
+      - elk
 
-  otel-collector:
-    image: otel/opentelemetry-collector-contrib:latest
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.15.2
+    container_name: logstash
     volumes:
-      - ./services/opentelemetry-collector/config.yaml:/etc/otel/config.yaml:ro
-    command: [ "--config=/etc/otel/config.yaml" ]
+      - ./services/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    ports:
+      - "5044:5044"
+    depends_on:
+      - elasticsearch
     networks:
-      - telemetry
-      - telemetry-export
+      - elk
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.10.0
@@ -84,29 +99,26 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elasticsearch-network
+      - elk
 
   nginx:
     image: nginx:latest
     volumes:
       - ./services/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - conversion
-    links:
-      - "conversion:app" # allow to access the conversion service via the alias 'app'
+      - app
     ports:
       - "4000:4000"
     networks:
       - app-network
 
 networks:
-  telemetry:
-    internal: true
-  telemetry-export:
-  elasticsearch-network:
+  elk:
+    driver: bridge
   app-network:
     driver: bridge
 
 volumes:
   mongo_data:
   esdata:
+  qdrant_data:
