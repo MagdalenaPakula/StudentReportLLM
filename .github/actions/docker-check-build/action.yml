@@ -1,0 +1,24 @@
+name: "Build docker container"
+inputs:
+  context:
+    description: "Build context of the docker container"
+    required: true
+  dockerfile:
+    description: "Location of the Dockerfile"
+    required: false
+    default: ""
+outputs:
+  build-status:
+    description: "Status of the docker build"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Build Docker image
+      run: |
+        if [ -z "${{ inputs.dockerfile }}" ]; then
+          docker build --check ${{ inputs.context }}
+        else
+          docker build --check -f ${{ inputs.dockerfile }} ${{ inputs.context }}
+        fi
+      shell: bash

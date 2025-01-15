@@ -1,0 +1,8 @@
+name: "Check Docker Compose project"
+description: "Starts a Docker Compose project and checks if all the services have started correctly"
+
+runs:
+  using: composite
+  steps:
+    - run: ./scripts/check_docker_compose.sh
+      shell: bash

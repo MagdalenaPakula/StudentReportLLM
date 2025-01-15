@@ -11,5 +11,7 @@ RUN ["opentelemetry-bootstrap", "-a", "install"]
 # copy the current service source code
 COPY src .
 
+EXPOSE 5000
+
 # Run the Flask application with opentelemetry instrumentation
-CMD ["opentelemetry-instrument", "python", "main.py"]
+CMD ["opentelemetry-instrument", "python", "app.py"]
