@@ -48,6 +48,18 @@ services:
     networks:
       - app-network
 
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT__STORAGE__PATH=/qdrant/storage
+    networks:
+      - app-network
+
   rabbitmq:
     build: services/rabbitmq
     container_name: rabbitmq
@@ -146,3 +158,4 @@ networks:
 volumes:
   mongo_data:
   esdata:
+  qdrant_data:
