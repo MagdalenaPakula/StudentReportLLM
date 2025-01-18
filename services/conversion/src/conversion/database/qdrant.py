@@ -1,3 +1,4 @@
+# todo: this has to go to grading service
 from qdrant_client import QdrantClient
 from os import getenv
 
@@ -11,7 +12,7 @@ except Exception:
     client.create_collection(
         collection_name=collection_name,
         vectors_config={
-            "size": 1536, 
+            "size": 1536,
             "distance": "Cosine"
         }
     )

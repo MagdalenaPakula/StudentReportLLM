@@ -1,30 +1,48 @@
+x-otel-autoinstrumentation-env-var: &otel-autoinstrumentation-config
+  OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED: true
+  OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+  OTEL_LOGS_EXPORTER: "otlp"
+  OTEL_TRACES_EXPORTER: "otlp"
+  OTEL_METRICS_EXPORTER: "otlp"
+
+x-rabbitmq: &rabbitmq
+  RABBITMQ_HOST: rabbitmq
+  RABBITMQ_PORT: ${RABBITMQ_AMQP_PORT:-5672}
+
 services:
-  app:
+  conversion:
     build: services/conversion
-    expose:
-      - "5000"
+    container_name: conversion-service
     depends_on:
       - mongo
       - rabbitmq
-      - logstash
-      - qdrant
+      - otel-collector
     environment:
-      - MONGO_URI=mongodb://mongo:27017/
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - LOGSTASH_HOST=logstash
-      - LOGSTASH_PORT=5044
-      - QDRANT_HOST=qdrant
-      - QDRANT_PORT=6333
+      MONGO_URI: mongodb://mongo:27017/
+      OTEL_SERVICE_NAME: conversion-service
+      RABBITMQ_RECV_QUEUE: ${QUEUE_UNCONVERTED_DOCUMENTS}
+      <<: [ *rabbitmq, *otel-autoinstrumentation-config ]
     networks:
       - app-network
-      - elk
+      - telemetry
+
+  user_service:
+    build: services/user_service
+    container_name: user-service
+    depends_on:
+      - rabbitmq
+      - otel-collector
+    environment:
+      OTEL_SERVICE_NAME: user-service
+      RABBITMQ_PUBLISH_QUEUE: ${QUEUE_UNCONVERTED_DOCUMENTS}
+      <<: [*rabbitmq, *otel-autoinstrumentation-config]
+    networks:
+      - app-network
+      - telemetry
 
   mongo:
     image: mongo:latest
     container_name: mongo_db
-    ports:
-      - "27017:27017"
     volumes:
       - mongo_data:/data/db
     networks:
@@ -43,45 +61,60 @@ services:
       - app-network
 
   rabbitmq:
-    image: rabbitmq:3-management
+    build: services/rabbitmq
     container_name: rabbitmq
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "${RABBITMQ_AMQP_PORT:-5672}:${RABBITMQ_AMQP_PORT:-5672}" # AMQP without TLS
+      - "${RABBITMQ_UI_PORT:-15672}:15672" # http management UI without TLS
     networks:
       - app-network
+      - telemetry
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
     container_name: elasticsearch
     environment:
-      - node.name=elasticsearch
-      - cluster.name=docker-cluster
-      - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      node.name: elasticsearch
+      cluster.name: docker-cluster
+      discovery.type: single-node
+      bootstrap.memory_lock: true
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
       - esdata:/usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
     networks:
-      - elk
+      - telemetry-export
+      - elasticsearch-network
 
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.15.2
-    container_name: logstash
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
     volumes:
-      - ./services/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
-    ports:
-      - "5044:5044"
-    depends_on:
-      - elasticsearch
+      - ./services/opentelemetry-collector/config.yaml:/etc/otel/config.yaml:ro
+    command: [ "--config=/etc/otel/config.yaml" ]
     networks:
-      - elk
+      - telemetry
+      - telemetry-export
+    ports:
+      - "9091:9090" # prometheus scraping endpoint
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "${PROMETHEUS_UI_PORT:-9090}:9090"  # prometheus web UI
+    volumes:
+      - ./services/prometheus/config.yaml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - telemetry-export
+
+  yaeger:
+    image: jaegertracing/all-in-one
+    networks:
+      - telemetry-export
+    ports:
+      - "${YAEGER_UI_PORT:-16686}:16686"  # yaeger web UI
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.10.0
@@ -99,22 +132,26 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elk
+      - elasticsearch-network
 
   nginx:
     image: nginx:latest
     volumes:
       - ./services/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - app
+      - user_service
+    links:
+      - "user_service:app" # allow to access the user service via the alias 'app'
     ports:
-      - "4000:4000"
+      - "${NGINX_EXPOSED_PORT:?Port to run application on not set}:80"
     networks:
       - app-network
 
 networks:
-  elk:
-    driver: bridge
+  telemetry:
+    internal: true
+  telemetry-export:
+  elasticsearch-network:
   app-network:
     driver: bridge
 
