@@ -2,7 +2,6 @@ import logging
 import os
 import re
 import traceback
-from typing import Optional
 
 import docx2txt
 import pdfplumber
@@ -10,7 +9,7 @@ from opentelemetry import metrics, trace
 from opentelemetry.trace import Span
 from opentelemetry.trace.span import StatusCode as SpanStatusCode
 
-from src.conversion.database.mongo import mongo_collection
+from services.conversion.src.conversion.database.mongo import mongo_collection
 
 tracer = trace.get_tracer(__name__)
 meter = metrics.get_meter(__name__)

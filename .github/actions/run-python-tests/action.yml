@@ -7,7 +7,15 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: "TODO"  # todo: Implement running python tests as github actions
+    - name: Install Python dependencies
       run: |
-        echo TODO: Run tests in ${{ inputs.project_dir }}
+        cd ${{ inputs.project_dir }}
+        pip install --upgrade pip
+        pip install -r requirements.txt
+      shell: bash
+
+    - name: Run Python tests
+      run: |
+        cd ${{ inputs.project_dir }}
+        python -m unittest discover tests
       shell: bash

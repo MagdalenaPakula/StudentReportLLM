@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from conversion.convert import save_to_mongodb
+from services.conversion.src.conversion.convert import save_to_mongodb
 
 
 class TestSaveToMongodb(unittest.TestCase):
