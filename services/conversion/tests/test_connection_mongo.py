@@ -15,7 +15,6 @@ class TestSaveToMongodb(unittest.TestCase):
 
         save_to_mongodb(mock_collection, "test_file.txt", "This is a test text")
 
-        # Assert
         mock_collection.insert_one.assert_called_once_with({
             "file_name": "test_file.txt",
             "text": "This is a test text"
