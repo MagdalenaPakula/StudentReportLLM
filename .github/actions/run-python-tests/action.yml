@@ -16,7 +16,6 @@ runs:
 
     - name: Set PYTHONPATH
       run: |
-        echo "PYTHON_ROOT=${{ github.workspace }}/${{ inputs.project_dir }}/src" >> $GITHUB_ENV
         echo "PYTHONPATH=${{ github.workspace }}/${{ inputs.project_dir }}/src" >> $GITHUB_ENV
       shell: bash
 

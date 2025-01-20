@@ -74,6 +74,30 @@ class TestTextConversion(unittest.TestCase):
         # Verify that save_to_mongodb wasn't called
         self.assertFalse(mock_save_to_mongodb.called)
 
+    @patch("conversion.convert.save_to_mongodb")
+    def test_convert_tex_missing_document_block(self, mock_save_to_mongodb):
+        invalid_latex_file = os.path.join(self.temp_dir.name, "invalid.tex")
+        with open(invalid_latex_file, "w") as f:
+            f.write(r"\documentclass{article}\nNo document block here.")
+
+        with self.assertRaisesRegex(ValueError, "Could not find main content"):
+            convert_to_txt(invalid_latex_file)
+
+        mock_save_to_mongodb.assert_not_called()
+
+
+    @patch("conversion.convert.failed_conversions.add")
+    @patch("conversion.convert.save_to_mongodb")
+    def test_docx2txt_unexpected_exception(self, mock_save_to_mongodb, mock_failed_counter):
+        with patch("docx2txt.process") as mock_docx2txt_process:
+            mock_docx2txt_process.side_effect = RuntimeError("Unexpected error")
+
+            with self.assertRaises(RuntimeError):
+                convert_to_txt(self.docx_file)
+
+            mock_failed_counter.assert_called_once()
+            mock_save_to_mongodb.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()
