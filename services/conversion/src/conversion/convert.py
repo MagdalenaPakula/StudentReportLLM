@@ -2,7 +2,6 @@ import logging
 import os
 import re
 import traceback
-from typing import Optional
 
 import docx2txt
 import pdfplumber

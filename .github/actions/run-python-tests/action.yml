@@ -1,13 +1,26 @@
 name: "Run unit tests"
 inputs:
   project_dir:
-    description: "Root directory of the project. Should contain `src` and `test` directories."
+    description: "Root directory of the project. Should contain `src` and `tests` directories."
     required: true
 
 runs:
   using: "composite"
   steps:
-    - name: "TODO"  # todo: Implement running python tests as github actions
+    - name: Install Python dependencies
       run: |
-        echo TODO: Run tests in ${{ inputs.project_dir }}
+        cd ${{ inputs.project_dir }}
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
+      shell: bash
+
+    - name: Set PYTHONPATH
+      run: |
+        echo "PYTHONPATH=${{ github.workspace }}/${{ inputs.project_dir }}/src" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Run Python tests
+      run: |
+        cd ${{ inputs.project_dir }}
+        python -m unittest discover tests
       shell: bash
