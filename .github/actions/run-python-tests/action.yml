@@ -1,7 +1,7 @@
 name: "Run unit tests"
 inputs:
   project_dir:
-    description: "Root directory of the project. Should contain `src` and `test` directories."
+    description: "Root directory of the project. Should contain `src` and `tests` directories."
     required: true
 
 runs:
@@ -14,13 +14,20 @@ runs:
         pip install -r requirements.txt
       shell: bash
 
-    - name: Set PYTHON_ROOT
+    - name: Set PYTHONPATH
       run: |
-        echo "PYTHON_ROOT=$(pwd)/src" >> $GITHUB_ENV
+        echo "PYTHONPATH=${{ inputs.project_dir }}/src" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Debug PYTHONPATH
+      run: |
+        echo "PYTHONPATH is set to: $PYTHONPATH"
+        ls -R $PYTHONPATH
       shell: bash
 
     - name: Run Python tests
       run: |
         cd ${{ inputs.project_dir }}
-        PYTHONPATH=$PYTHON_ROOT python -m unittest discover tests
+        export PYTHONPATH=${{ inputs.project_dir }}/src
+        python -m unittest discover tests
       shell: bash
