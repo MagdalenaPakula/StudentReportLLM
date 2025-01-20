@@ -14,8 +14,13 @@ runs:
         pip install -r requirements.txt
       shell: bash
 
+    - name: Set PYTHON_ROOT
+      run: |
+        echo "PYTHON_ROOT=$(pwd)/src" >> $GITHUB_ENV
+      shell: bash
+
     - name: Run Python tests
       run: |
         cd ${{ inputs.project_dir }}
-        python -m unittest discover tests
+        PYTHONPATH=$PYTHON_ROOT python -m unittest discover tests
       shell: bash
