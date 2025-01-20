@@ -85,12 +85,11 @@ class TestTextConversion(unittest.TestCase):
 
         mock_save_to_mongodb.assert_not_called()
 
-
     @patch("conversion.convert.failed_conversions.add")
     @patch("conversion.convert.save_to_mongodb")
     def test_docx2txt_unexpected_exception(self, mock_save_to_mongodb, mock_failed_counter):
         with patch("docx2txt.process") as mock_docx2txt_process:
-            mock_docx2txt_process.side_effect = RuntimeError("Unexpected error")
+            mock_docx2txt_process.side_effect = RuntimeError("Unexpected Error")
 
             with self.assertRaises(RuntimeError):
                 convert_to_txt(self.docx_file)
@@ -98,6 +97,37 @@ class TestTextConversion(unittest.TestCase):
             mock_failed_counter.assert_called_once()
             mock_save_to_mongodb.assert_not_called()
 
+    @patch("conversion.convert.save_to_mongodb")
+    def test_convert_docx_valid_document(self, mock_save_to_mongodb):
+        with patch("docx2txt.process") as mock_docx2txt_process:
+            mock_docx2txt_process.return_value = "Valid DOCX content."
+
+            text = convert_to_txt(self.docx_file)
+            self.assertEqual(text, "Valid DOCX content.")
+
+            mock_save_to_mongodb.assert_called_once_with(
+                mongo_collection, self.docx_file, "Valid DOCX content."
+            )
+
+    @patch("conversion.convert.save_to_mongodb")
+    def test_convert_pdf_with_multiple_pages(self, mock_save_to_mongodb):
+        mock_pdf = MagicMock()
+        mock_page1 = MagicMock()
+        mock_page1.extract_text.return_value = "Page 1 content."
+        mock_page2 = MagicMock()
+        mock_page2.extract_text.return_value = "Page 2 content."
+        mock_pdf.pages = [mock_page1, mock_page2]
+
+        with patch("pdfplumber.open", MagicMock()) as mock_open:
+            mock_open.return_value.__enter__.return_value = mock_pdf
+
+            text = convert_to_txt(self.pdf_file)
+
+        self.assertEqual(text, "Page 1 content.\nPage 2 content.")
+
+        mock_save_to_mongodb.assert_called_once_with(
+            mongo_collection, self.pdf_file, "Page 1 content.\nPage 2 content."
+        )
 
 if __name__ == "__main__":
     unittest.main()
