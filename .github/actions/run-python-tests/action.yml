@@ -10,24 +10,18 @@ runs:
     - name: Install Python dependencies
       run: |
         cd ${{ inputs.project_dir }}
-        pip install --upgrade pip
-        pip install -r requirements.txt
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
       shell: bash
 
     - name: Set PYTHONPATH
       run: |
-        echo "PYTHONPATH=${{ inputs.project_dir }}/src" >> $GITHUB_ENV
-      shell: bash
-
-    - name: Debug PYTHONPATH
-      run: |
-        echo "PYTHONPATH is set to: $PYTHONPATH"
-        ls -R $PYTHONPATH
+        echo "PYTHON_ROOT=${{ github.workspace }}/${{ inputs.project_dir }}/src" >> $GITHUB_ENV
+        echo "PYTHONPATH=${{ github.workspace }}/${{ inputs.project_dir }}/src" >> $GITHUB_ENV
       shell: bash
 
     - name: Run Python tests
       run: |
         cd ${{ inputs.project_dir }}
-        export PYTHONPATH=${{ inputs.project_dir }}/src
         python -m unittest discover tests
       shell: bash
