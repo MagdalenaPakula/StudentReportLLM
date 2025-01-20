@@ -1,13 +1,27 @@
 name: "Run static analysis"
+description: "A GitHub Action to perform static analysis using SonarQube."
 inputs:
   project_dir:
     description: "Root directory of the project."
     required: true
+outputs:
+  scan_status:
+    description: "Status of the SonarQube scan."
 
 runs:
   using: "composite"
   steps:
-    - name: "TODO"  # todo: Implement sonar scan
+    - name: "SonarQube/Cloud Scan"
+      uses: sonarsource/sonarqube-scan-action@master
+      with:
+        args: >
+          -Dsonar.projectKey=StudentReportLLM  
+          -Dsonar.organization=studentreportllm  
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    - name: "Output scan status"
       run: |
-        echo TODO: Run sonar scan in ${{ inputs.project_dir }}
+        echo "scan_status=success" >> $GITHUB_OUTPUT
       shell: bash
