@@ -6,8 +6,8 @@ from zipfile import BadZipFile
 
 from pdfminer.pdfparser import PDFSyntaxError
 
-from services.conversion.src.conversion.convert import convert_to_txt
-from services.conversion.src.conversion.database.mongo import mongo_collection
+from conversion.convert import convert_to_txt
+from conversion.database.mongo import mongo_collection
 
 
 class TestTextConversion(unittest.TestCase):
