@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from grading.src.grading.grade import save_to_qdrant
+from grading.grade import save_to_qdrant
 
 
 class TestSaveToMongodb(unittest.TestCase):

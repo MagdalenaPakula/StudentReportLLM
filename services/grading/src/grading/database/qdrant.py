@@ -4,8 +4,8 @@ from os import getenv
 
 logger = logging.getLogger(__name__)
 
-QDRANT_HOST = getenv('QDRANT_HOST', 'localhost')
-QDRANT_PORT = getenv('QDRANT_PORT', '6333')
+QDRANT_HOST = getenv('QDRANT_HOST')
+QDRANT_PORT = getenv('QDRANT_PORT')
 
 client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
 

@@ -48,7 +48,7 @@ Callback = Callable[
 ]
 
 
-def consume_conversion_requests(callback: Callback):
+def consume_grading_requests(callback: Callback):
     logger = logging.getLogger(__name__)
 
     logger.debug(f"Trying to connect to {_connection_parameters}")

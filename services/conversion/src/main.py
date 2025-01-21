@@ -3,7 +3,7 @@ import logging
 from conversion.handler import handle_message
 from conversion.messaging import consume_conversion_requests
 
-
+ 
 def try_start_with_retries(num_retries: int) -> None:
     import pika.exceptions
     import time

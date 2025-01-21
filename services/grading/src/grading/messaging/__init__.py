@@ -1,1 +1,1 @@
-from .rabbitmq import consume_conversion_requests
+from .rabbitmq import consume_grading_requests

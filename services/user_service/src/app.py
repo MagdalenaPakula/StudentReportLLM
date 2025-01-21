@@ -1,18 +1,23 @@
 import logging
+import uuid
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from flask_http_middleware import MiddlewareManager
 from opentelemetry import trace
 
 from middleware import RequestTimingMiddleware
 from rabbitmq import send_file
 
+# OpenTelemetry setup
 tracer = trace.get_tracer(__name__)
 
+# Flask app setup
 app = Flask(__name__)
 app.wsgi_app = MiddlewareManager(app)
 app.wsgi_app.add_middleware(RequestTimingMiddleware)
 
+upload_status = {}
+embedding_status = {}
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -33,8 +38,12 @@ def upload_file():
         app.logger.info(f"Received file {file_name}")
         file_contents = file.read()
 
-        # todo: Assign unique ID for this work
-        send_file(file_name, file_contents)
+        # Generate a unique ID for the file
+        file_id = str(uuid.uuid4())
+
+        # Send file to RabbitMQ for processing
+        send_file(file_id, file_contents)
+        app.logger.info(f"File {file_name} sent to RabbitMQ with ID {file_id}")
 
         # HTTP 202 - Accepted, because file is sent for further processing, but not yet processed
         return 'Request accepted', 202
@@ -43,16 +52,39 @@ def upload_file():
         return f"Internal error: {str(e)}", 500
 
 
+@app.route('/status/<file_id>', methods=['GET'])
+def get_upload_status(file_id):
+    try:
+        if file_id not in upload_status:
+            return jsonify({"message": "File not found"}), 404
+
+        return jsonify({"file_id": file_id, "status": upload_status[file_id]["status"]}), 200
+    except Exception as e:
+        app.logger.error(f"Error fetching status for {file_id}: {str(e)}")
+        return f"Internal error: {str(e)}", 500
+
+
+@app.route('/embedding-status/<file_id>', methods=['GET'])
+def get_embedding_status(file_id):
+    try:
+        if file_id not in embedding_status:
+            return jsonify({"message": "Embedding not found"}), 404
+
+        return jsonify({"file_id": file_id, "status": embedding_status[file_id]["status"]}), 200
+    except Exception as e:
+        app.logger.error(f"Error fetching embedding status for {file_id}: {str(e)}")
+        return f"Internal error: {str(e)}", 500
+
 def configure_logging():
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)
     app.logger.setLevel(logging.NOTSET)
 
     # setup console logging
-    hanlder = logging.StreamHandler()
+    handler = logging.StreamHandler()
     formatter = logging.Formatter('%(asctime)s <%(name)s> [%(levelname)s] %(message)s')
-    hanlder.setFormatter(formatter)
-    root_logger.addHandler(hanlder)
+    handler.setFormatter(formatter)
+    root_logger.addHandler(handler)
 
 def create_app() -> Flask:
     configure_logging()

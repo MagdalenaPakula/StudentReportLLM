@@ -10,6 +10,20 @@ x-rabbitmq: &rabbitmq
   RABBITMQ_PORT: ${RABBITMQ_AMQP_PORT:-5672}
 
 services:
+  user_service:
+    build: services/user_service
+    container_name: user-service
+    depends_on:
+      - rabbitmq
+      - otel-collector
+    environment:
+      OTEL_SERVICE_NAME: user-service
+      RABBITMQ_PUBLISH_QUEUE: ${QUEUE_UNCONVERTED_DOCUMENTS}
+      <<: [*rabbitmq, *otel-autoinstrumentation-config]
+    networks:
+      - app-network
+      - telemetry
+
   conversion:
     build: services/conversion
     container_name: conversion-service
@@ -21,20 +35,25 @@ services:
       MONGO_URI: mongodb://mongo:27017/
       OTEL_SERVICE_NAME: conversion-service
       RABBITMQ_RECV_QUEUE: ${QUEUE_UNCONVERTED_DOCUMENTS}
-      <<: [ *rabbitmq, *otel-autoinstrumentation-config ]
+      <<: [*rabbitmq, *otel-autoinstrumentation-config]
     networks:
       - app-network
       - telemetry
 
-  user_service:
-    build: services/user_service
-    container_name: user-service
+  grading:
+    build: services/grading
+    container_name: grading-service
     depends_on:
+      - mongo
+      - qdrant
       - rabbitmq
       - otel-collector
     environment:
-      OTEL_SERVICE_NAME: user-service
-      RABBITMQ_PUBLISH_QUEUE: ${QUEUE_UNCONVERTED_DOCUMENTS}
+      MONGO_URI: mongodb://mongo:27017/
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: 6333
+      OTEL_SERVICE_NAME: grading-service
+      RABBITMQ_RECV_QUEUE: ${QUEUE_UNCONVERTED_DOCUMENTS}
       <<: [*rabbitmq, *otel-autoinstrumentation-config]
     networks:
       - app-network
@@ -51,12 +70,9 @@ services:
   qdrant:
     image: qdrant/qdrant
     container_name: qdrant
-    ports:
-      - "6333:6333"
     volumes:
       - qdrant_data:/qdrant/storage
-    environment:
-      - QDRANT__STORAGE__PATH=/qdrant/storage
+
     networks:
       - app-network
 
@@ -93,7 +109,7 @@ services:
     image: otel/opentelemetry-collector-contrib:latest
     volumes:
       - ./services/opentelemetry-collector/config.yaml:/etc/otel/config.yaml:ro
-    command: [ "--config=/etc/otel/config.yaml" ]
+    command: ["--config=/etc/otel/config.yaml"]
     networks:
       - telemetry
       - telemetry-export
@@ -103,7 +119,7 @@ services:
   prometheus:
     image: prom/prometheus
     ports:
-      - "${PROMETHEUS_UI_PORT:-9090}:9090"  # prometheus web UI
+      - "${PROMETHEUS_UI_PORT:-9090}:9090" # prometheus web UI
     volumes:
       - ./services/prometheus/config.yaml:/etc/prometheus/prometheus.yml:ro
     networks:
@@ -114,7 +130,7 @@ services:
     networks:
       - telemetry-export
     ports:
-      - "${YAEGER_UI_PORT:-16686}:16686"  # yaeger web UI
+      - "${YAEGER_UI_PORT:-16686}:16686" # yaeger web UI
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.10.0
