@@ -41,7 +41,7 @@ def _get_publish_queue() -> str:
 _publish_queue = _get_publish_queue()
 
 
-def send_file(file_name: str, file_contents: bytes) -> None:
+def send_file(file_id: str, file_name: str, file_contents: bytes) -> None:
     exchange_name = ''
     routing_key = _publish_queue
 
@@ -76,6 +76,7 @@ def send_file(file_name: str, file_contents: bytes) -> None:
                 content_type='application/octet-stream',
                 headers={
                     'x-file-name': file_name,
+                    'x-file-id': file_id,
                 },
             )
             channel.basic_publish(

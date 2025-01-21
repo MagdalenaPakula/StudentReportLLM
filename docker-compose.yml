@@ -35,6 +35,7 @@ services:
       MONGO_URI: mongodb://mongo:27017/
       OTEL_SERVICE_NAME: conversion-service
       RABBITMQ_RECV_QUEUE: ${QUEUE_UNCONVERTED_DOCUMENTS}
+      RABBITMQ_PUBLISH_QUEUE: ${QUEUE_CONVERTED_DOCUMENTS}
       <<: [*rabbitmq, *otel-autoinstrumentation-config]
     networks:
       - app-network
@@ -53,7 +54,7 @@ services:
       QDRANT_HOST: qdrant
       QDRANT_PORT: 6333
       OTEL_SERVICE_NAME: grading-service
-      RABBITMQ_RECV_QUEUE: ${QUEUE_UNCONVERTED_DOCUMENTS}
+      RABBITMQ_RECV_QUEUE: ${QUEUE_CONVERTED_DOCUMENTS}
       <<: [*rabbitmq, *otel-autoinstrumentation-config]
     networks:
       - app-network

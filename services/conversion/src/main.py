@@ -1,13 +1,13 @@
 import logging
 
+import pika.exceptions
+import time
+
 from conversion.handler import handle_message
 from conversion.messaging import consume_conversion_requests
 
  
 def try_start_with_retries(num_retries: int) -> None:
-    import pika.exceptions
-    import time
-
     timeout_seconds: float = 1.0
     failed_attempts = 0
     while True:

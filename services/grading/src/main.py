@@ -1,13 +1,13 @@
 import logging
 
+import pika.exceptions
+import time
+
 from grading.handler import handle_message
 from grading.messaging import consume_grading_requests
 
  
 def try_start_with_retries(num_retries: int) -> None:
-    import pika.exceptions
-    import time
-
     timeout_seconds: float = 1.0
     failed_attempts = 0
     while True:

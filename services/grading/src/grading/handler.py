@@ -18,13 +18,10 @@ def handle_message(channel: pika.channel.Channel, method: pika.spec.Basic.Delive
         span: Span
         try:
             logger.info(f"Handling message {message_id} with correlation_id {correlation_id}")
-            document_body = base64.b64decode(body)
-            document_name = properties.headers['x-file-name']
-            logger.debug(f"Received file {document_name}: {document_body}")
+            # document_body = base64.b64decode(body)
+            document_id = properties.headers['x-file-id']
+            logger.debug(f"Received file id: {document_id}")
 
-            # todo: Convert to text format
-            # todo: Save to mongo
-            # todo: publish message to rabbitmq
 
         except Exception as e:
             span.record_exception(e, escaped=False)

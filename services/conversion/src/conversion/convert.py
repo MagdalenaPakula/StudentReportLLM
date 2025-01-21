@@ -17,17 +17,22 @@ successful_conversions = meter.create_counter("conversion.converted_documents")
 failed_conversions = meter.create_counter("conversion.conversion_errors")
 
 
-def save_to_mongodb(collection, file_name, text):
+def save_to_mongo(file_id, text):
     logger = logging.getLogger(__name__ + '.save_to_mongodb')
     try:
         document = {
-            "file_name": file_name,
+            "file_id": file_id,
             "text": text
         }
-        result = collection.insert_one(document)
+        result = mongo_collection.insert_one(document)
         logger.info(f"Inserted document with ID: {result.inserted_id}")
     except Exception as e:
-        logger.error(f"Error inserting document: {e}")
+        logger.error(f"Error inserting document: {str(e)}")
+
+
+def _save_to_mongodb(grading_request_id: str, document_text: str):
+    # todo: implement saving to mongo
+    pass
 
 
 def convert_to_txt(input_file) -> str:
@@ -69,7 +74,7 @@ def convert_to_txt(input_file) -> str:
 
         logger.info(f"Conversion successful for file: {input_file}")
         successful_conversions.add(1, attributes=attributes)
-        save_to_mongodb(mongo_collection, input_file, text)
+        # _save_to_mongodb(mongo_collection, input_file, text)
         return text
 
     except Exception as e:

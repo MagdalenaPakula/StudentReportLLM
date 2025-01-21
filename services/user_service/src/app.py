@@ -42,11 +42,11 @@ def upload_file():
         file_id = str(uuid.uuid4())
 
         # Send file to RabbitMQ for processing
-        send_file(file_id, file_contents)
+        send_file(file_id, file_name, file_contents)
         app.logger.info(f"File {file_name} sent to RabbitMQ with ID {file_id}")
 
         # HTTP 202 - Accepted, because file is sent for further processing, but not yet processed
-        return 'Request accepted', 202
+        return jsonify(message='Request accepted', file_id=file_id), 202
     except Exception as e:
         app.logger.error(str(e))
         return f"Internal error: {str(e)}", 500
