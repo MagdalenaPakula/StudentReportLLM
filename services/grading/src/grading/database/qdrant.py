@@ -20,3 +20,5 @@ except Exception:
         vectors_config={"size": 1536, "distance": "Cosine"}
     )
     logger.info(f"Created new collection: {collection_name}")
+
+qdrant_collection = client.get_collection(collection_name)

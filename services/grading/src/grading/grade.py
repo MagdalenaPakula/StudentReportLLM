@@ -6,7 +6,7 @@ from grading.database.qdrant import client, collection_name
 
 logger = logging.getLogger(__name__)
 
-def save_to_qdrant(file_name, text, embedding):
+def save_to_qdrant(collection, embedding, file_name, text):
     try:
         payload = {
             "points": [{
@@ -15,7 +15,7 @@ def save_to_qdrant(file_name, text, embedding):
                 "payload": {"file_name": file_name, "text": text}
             }]
         }
-        client.upsert(collection_name=collection_name, points=payload['points'])
+        client.upsert(collection_name=collection, points=payload['points'])
         logger.info(f"Successfully saved {file_name} to Qdrant.")
     except Exception as e:
         logger.error(f"Error saving to Qdrant: {e}")
