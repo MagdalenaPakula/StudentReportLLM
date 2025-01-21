@@ -6,8 +6,10 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+RUN ["opentelemetry-bootstrap", "-a", "install"]
 
-EXPOSE 5001
+# copy the current service source code
+COPY src .
 
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5001"]
+# Run the Flask application with opentelemetry instrumentation
+CMD ["opentelemetry-instrument", "python", "main.py"]

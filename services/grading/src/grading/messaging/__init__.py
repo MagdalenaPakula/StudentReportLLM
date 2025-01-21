@@ -1,0 +1,1 @@
+from .rabbitmq import consume_conversion_requests
