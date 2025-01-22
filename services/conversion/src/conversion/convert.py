@@ -17,7 +17,7 @@ successful_conversions = meter.create_counter("conversion.converted_documents")
 failed_conversions = meter.create_counter("conversion.conversion_errors")
 
 
-def _save_to_mongodb(collection, file_name, text):
+def save_to_mongodb(collection, file_name, text):
     logger = logging.getLogger(__name__ + '.save_to_mongodb')
     try:
         document = {
@@ -73,7 +73,7 @@ def convert_to_txt(input_file) -> str:
 
         logger.info(f"Conversion successful for file: {input_file}")
         successful_conversions.add(1, attributes=attributes)
-        _save_to_mongodb(mongo_collection, input_file, text)
+        save_to_mongodb(mongo_collection, input_file, text)
         return text
 
     except Exception as e:
