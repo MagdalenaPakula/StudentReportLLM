@@ -16,7 +16,7 @@ runs:
   steps:
     - name: Debug Inputs
       run: |
-        echo "SONAR_HOST_URL=${{ inputs.SONAR_HOST_URL }}"
+        echo "SONAR_HOST_URL=${{ secrets.SONAR_HOST_URL }}"
         echo "SONAR_TOKEN=[REDACTED]"
       shell: bash
 
@@ -26,6 +26,6 @@ runs:
         args: >
           -Dsonar.projectKey=StudentReportLLM
           -Dsonar.organization=studentreportllm
-          -Dsonar.host.url=${{ inputs.SONAR_HOST_URL }}
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
       env:
-        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
