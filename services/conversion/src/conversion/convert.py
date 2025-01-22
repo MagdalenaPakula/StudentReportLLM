@@ -10,6 +10,7 @@ from opentelemetry.trace import Span
 from opentelemetry.trace.span import StatusCode as SpanStatusCode
 
 from conversion.database.mongo import mongo_collection
+from conversion.convert import save_to_mongodb
 
 tracer = trace.get_tracer(__name__)
 meter = metrics.get_meter(__name__)
@@ -73,7 +74,7 @@ def convert_to_txt(input_file) -> str:
 
         logger.info(f"Conversion successful for file: {input_file}")
         successful_conversions.add(1, attributes=attributes)
-        _save_to_mongodb(mongo_collection, input_file, text)
+        save_to_mongodb(mongo_collection, input_file, text)
         return text
 
     except Exception as e:
