@@ -8,7 +8,7 @@ import pika.spec
 from opentelemetry import trace
 from opentelemetry.trace.span import Span
 
-from src.conversion.convert import convert_to_txt, save_to_mongo
+from services.conversion.src.conversion.convert import convert_to_txt, save_to_mongo
 
 tracer = trace.get_tracer(__name__)
 logger = logging.getLogger(__name__)
