@@ -33,7 +33,7 @@ class TestTextConversion(unittest.TestCase):
         # Clean up the temporary directory
         self.temp_dir.cleanup()
 
-    @patch("services.conversion.convert.save_to_mongodb")
+    @patch("conversion.convert.save_to_mongodb")
     def test_convert_docx_to_txt(self, mock_save_to_mongodb):
         with patch("docx2txt.process") as mock_docx2txt_process:
             mock_docx2txt_process.side_effect = BadZipFile("File is not a zip file")
@@ -43,7 +43,7 @@ class TestTextConversion(unittest.TestCase):
             # Verify that save_to_mongodb wasn't called
             self.assertFalse(mock_save_to_mongodb.called)
 
-    @patch("services.conversion.convert.save_to_mongodb")
+    @patch("conversion.convert.save_to_mongodb")
     def test_convert_pdf_to_txt(self, mock_save_to_mongodb):
         with patch("pdfplumber.open") as mock_pdf_open:
             mock_pdf_open.side_effect = PDFSyntaxError("No /Root object! - Is this really a PDF?")
@@ -53,7 +53,7 @@ class TestTextConversion(unittest.TestCase):
             # Verify that save_to_mongodb wasn't called
             self.assertFalse(mock_save_to_mongodb.called)
 
-    @patch("services.conversion.convert.save_to_mongodb")
+    @patch("conversion.convert.save_to_mongodb")
     def test_convert_tex_to_txt(self, mock_save_to_mongodb):
         # Mock the return value of save_to_mongodb
         mock_save_to_mongodb.return_value = MagicMock()
@@ -66,7 +66,7 @@ class TestTextConversion(unittest.TestCase):
             # Verify that save_to_mongodb was called with the correct arguments
             mock_save_to_mongodb.assert_called_once_with(mongo_collection, self.tex_file, expected_text.strip())
 
-    @patch("services.conversion.convert.save_to_mongodb")
+    @patch("conversion.convert.save_to_mongodb")
     def test_unsupported_file_format(self, mock_save_to_mongodb):
         with self.assertRaises(ValueError):
             convert_to_txt(self.unsupported_file)
@@ -74,6 +74,60 @@ class TestTextConversion(unittest.TestCase):
         # Verify that save_to_mongodb wasn't called
         self.assertFalse(mock_save_to_mongodb.called)
 
+    @patch("conversion.convert.save_to_mongodb")
+    def test_convert_tex_missing_document_block(self, mock_save_to_mongodb):
+        invalid_latex_file = os.path.join(self.temp_dir.name, "invalid.tex")
+        with open(invalid_latex_file, "w") as f:
+            f.write(r"\documentclass{article}\nNo document block here.")
+
+        with self.assertRaisesRegex(ValueError, "Could not find main content"):
+            convert_to_txt(invalid_latex_file)
+
+        mock_save_to_mongodb.assert_not_called()
+
+    @patch("conversion.convert.failed_conversions.add")
+    @patch("conversion.convert.save_to_mongodb")
+    def test_docx2txt_unexpected_exception(self, mock_save_to_mongodb, mock_failed_counter):
+        with patch("docx2txt.process") as mock_docx2txt_process:
+            mock_docx2txt_process.side_effect = RuntimeError("Unexpected Error")
+
+            with self.assertRaises(RuntimeError):
+                convert_to_txt(self.docx_file)
+
+            mock_failed_counter.assert_called_once()
+            mock_save_to_mongodb.assert_not_called()
+
+    @patch("conversion.convert.save_to_mongodb")
+    def test_convert_docx_valid_document(self, mock_save_to_mongodb):
+        with patch("docx2txt.process") as mock_docx2txt_process:
+            mock_docx2txt_process.return_value = "Valid DOCX content."
+
+            text = convert_to_txt(self.docx_file)
+            self.assertEqual(text, "Valid DOCX content.")
+
+            mock_save_to_mongodb.assert_called_once_with(
+                mongo_collection, self.docx_file, "Valid DOCX content."
+            )
+
+    @patch("conversion.convert.save_to_mongodb")
+    def test_convert_pdf_with_multiple_pages(self, mock_save_to_mongodb):
+        mock_pdf = MagicMock()
+        mock_page1 = MagicMock()
+        mock_page1.extract_text.return_value = "Page 1 content."
+        mock_page2 = MagicMock()
+        mock_page2.extract_text.return_value = "Page 2 content."
+        mock_pdf.pages = [mock_page1, mock_page2]
+
+        with patch("pdfplumber.open", MagicMock()) as mock_open:
+            mock_open.return_value.__enter__.return_value = mock_pdf
+
+            text = convert_to_txt(self.pdf_file)
+
+        self.assertEqual(text, "Page 1 content.\nPage 2 content.")
+
+        mock_save_to_mongodb.assert_called_once_with(
+            mongo_collection, self.pdf_file, "Page 1 content.\nPage 2 content."
+        )
 
 if __name__ == "__main__":
     unittest.main()
