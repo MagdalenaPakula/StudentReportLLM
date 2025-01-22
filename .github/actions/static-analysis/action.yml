@@ -1,6 +1,5 @@
 name: "Run static analysis"
 description: "A GitHub Action to perform static analysis using SonarQube."
-
 inputs:
   project_dir:
     description: "Root directory of the project."
@@ -12,24 +11,21 @@ inputs:
     description: "Authentication token for SonarQube."
     required: true
 
-outputs:
-  scan_status:
-    description: "Status of the SonarQube scan."
-
 runs:
   using: "composite"
   steps:
+    - name: Debug Inputs
+      run: |
+        echo "SONAR_HOST_URL=${{ inputs.SONAR_HOST_URL }}"
+        echo "SONAR_TOKEN=[REDACTED]"
+      shell: bash
+
     - name: "SonarQube/Cloud Scan"
       uses: sonarsource/sonarqube-scan-action@master
       with:
         args: >
-          -Dsonar.projectKey=StudentReportLLM  
-          -Dsonar.organization=studentreportllm  
+          -Dsonar.projectKey=StudentReportLLM
+          -Dsonar.organization=studentreportllm
           -Dsonar.host.url=${{ inputs.SONAR_HOST_URL }}
       env:
         SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
-
-    - name: "Output scan status"
-      run: |
-        echo "scan_status=success" >> $GITHUB_OUTPUT
-      shell: bash
