@@ -1,9 +1,17 @@
 name: "Run static analysis"
 description: "A GitHub Action to perform static analysis using SonarQube."
+
 inputs:
   project_dir:
     description: "Root directory of the project."
     required: true
+  SONAR_HOST_URL:
+    description: "The URL of the SonarQube server."
+    required: true
+  SONAR_TOKEN:
+    description: "Authentication token for SonarQube."
+    required: true
+
 outputs:
   scan_status:
     description: "Status of the SonarQube scan."
