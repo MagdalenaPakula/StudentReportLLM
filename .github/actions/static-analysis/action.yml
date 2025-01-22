@@ -17,9 +17,9 @@ runs:
         args: >
           -Dsonar.projectKey=StudentReportLLM  
           -Dsonar.organization=studentreportllm  
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+          -Dsonar.host.url=${{ inputs.SONAR_HOST_URL }}
       env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
 
     - name: "Output scan status"
       run: |
