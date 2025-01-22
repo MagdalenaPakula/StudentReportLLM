@@ -9,7 +9,7 @@ from opentelemetry import metrics, trace
 from opentelemetry.trace import Span
 from opentelemetry.trace.span import StatusCode as SpanStatusCode
 
-from services.conversion.src.conversion.database.mongo import mongo_collection
+from conversion.database.mongo import mongo_collection
 
 tracer = trace.get_tracer(__name__)
 meter = metrics.get_meter(__name__)
